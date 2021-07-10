@@ -1,0 +1,46 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
+
+class DatabaseProvider extends ChangeNotifier{
+
+  init()async{
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    String path = join(documentsDirectory.path, 'asset_EasySoftDataFile.db');
+    print(path);
+    if (FileSystemEntity.typeSync(path) == FileSystemEntityType.notFound){
+      print("File not found");
+      //ByteData data = await rootBundle.load(join('assets/database', 'test.db'));
+      ByteData data = await rootBundle.load(join('assets/database/EasySoftDataFile.db'));
+      List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+
+      // Save copied asset to documents
+      await new File(path).writeAsBytes(bytes);
+
+    }
+  }
+  Future<List> readTableName()async{
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String databasePath = join(appDocDir.path, 'asset_EasySoftDataFile.db');
+    var db = await openDatabase(databasePath);
+    String query = '''
+      SELECT name FROM sqlite_master
+      ''';
+    List<dynamic> list=await db.rawQuery(query);
+    return list;
+  }
+  getTable(String tableName)async{
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String databasePath = join(appDocDir.path, 'asset_EasySoftDataFile.db');
+    var db = await openDatabase(databasePath);
+    String query = '''
+      SELECT * FROM $tableName;
+      ''';
+    print(await db.rawQuery(query));
+
+  }
+}
