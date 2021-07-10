@@ -42,9 +42,9 @@ class DatabaseProvider extends ChangeNotifier{
       SELECT * FROM $tableName;
       ''';
     tableDetailList=await db.rawQuery(query);
+    print(tableDetailList);
     Map map=tableDetailList![0];
     tableColumnName=map.keys as List;
-
 
   }
 }

@@ -13,21 +13,65 @@ class TableDetailPage extends StatelessWidget {
       appBar:AppBar(
         title: Text("Table Details"),
       ),
-          body:SingleChildScrollView(
-        child: SizedBox(
-        height: ScreenConfig.screenHeight,
-        width: ScreenConfig.screenWidth,
-          child: ListView.builder(
-              itemCount: Provider.of<DatabaseProvider>(context,listen:false).tableColumnName!.length,
-              itemBuilder: (context,index){
-            return Wrap(
-              children: [
-                Text((Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index])),
-              ],
-            );
-          }),
-    ),
-    )
+          body:Column(
+            children: [
+              SizedBox(
+                  height: ScreenConfig.blockHeight*10,
+                  width: ScreenConfig.screenWidth,
+                  child: Table(
+                    children: [
+                      TableRow(
+                          children: [
+                            SizedBox(
+                              height: ScreenConfig.blockHeight*10,
+                              child: ListView.builder(
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: Provider.of<DatabaseProvider>(context,listen:false).tableColumnName!.length,
+                                  itemBuilder: (context,index){
+                                    return Text((Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString()));
+                                  }),
+                            )
+                          ]
+                      ),
+                    ],
+                  )
+              ),
+              SizedBox(
+                width:ScreenConfig.screenWidth,
+                height: ScreenConfig.blockHeight*50,
+                child: ListView.builder(
+                  scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: Provider.of<DatabaseProvider>(context,listen:false).tableDetailList!.length,
+                    itemBuilder: (context,index){
+                      Map map=Provider.of<DatabaseProvider>(context,listen:false).tableDetailList![index];
+                      print(map);
+                      return SizedBox(
+                        height: ScreenConfig.blockHeight*5,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: Provider.of<DatabaseProvider>(context,listen:false).tableColumnName!.length,
+                          itemBuilder: (context,i){
+                            return Padding(
+                                padding: EdgeInsets.only(right: 8.0)
+                                ,child: Text(map[Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![i]].toString()));
+                          }),);
+                      // return ListView.builder(
+                      //     scrollDirection: Axis.horizontal,
+                      //     shrinkWrap: true,
+                      //     itemCount: Provider.of<DatabaseProvider>(context,listen:false).tableColumnName!.length,
+                      //     itemBuilder: (context,index){
+                      //       print(map[Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index]]);
+                      //       return Container();
+                      //         //Text(map[Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index]]);
+                      //
+                      //
+                      //     });
+                    }),
+              )
+            ],
+          )
     );
   }
 }
