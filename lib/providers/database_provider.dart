@@ -7,7 +7,8 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseProvider extends ChangeNotifier{
-
+  List? tableDetailList;
+  List? tableColumnName;
   init()async{
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, 'asset_EasySoftDataFile.db');
@@ -33,14 +34,17 @@ class DatabaseProvider extends ChangeNotifier{
     List<dynamic> list=await db.rawQuery(query);
     return list;
   }
-  getTable(String tableName)async{
+  Future<void> getTable(String tableName)async{
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String databasePath = join(appDocDir.path, 'asset_EasySoftDataFile.db');
     var db = await openDatabase(databasePath);
     String query = '''
       SELECT * FROM $tableName;
       ''';
-    print(await db.rawQuery(query));
+    tableDetailList=await db.rawQuery(query);
+    Map map=tableDetailList![0];
+    tableColumnName=map.keys as List;
+
 
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sqllite_table_view/pages/home_page.dart';
+import 'package:flutter_sqllite_table_view/pages/table_detail_page.dart';
 import 'package:flutter_sqllite_table_view/providers/database_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       home: HomePage(),
       routes: {
+        '/table_detail_page':(context)=>TableDetailPage(),
 
       },
 
