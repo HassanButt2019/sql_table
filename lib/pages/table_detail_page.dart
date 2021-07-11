@@ -1,10 +1,34 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sqllite_table_view/config/screen_config.dart';
+import 'package:flutter_sqllite_table_view/config/values.dart';
 import 'package:flutter_sqllite_table_view/providers/database_provider.dart';
 import 'package:provider/provider.dart';
 class TableDetailPage extends StatelessWidget {
-  const TableDetailPage({Key? key}) : super(key: key);
+  List<DataColumn> list=List.generate(Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableColumnName!.length, (index) {
+    return DataColumn(
+        onSort: (columnIndex,sortAscending){
+          print(Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableColumnName![columnIndex]);
+          print(sortAscending);
+
+        },
+        label: Text(Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableColumnName![index].toString()));
+  });
+  List<DataRow> TableDetaillist=List.generate(Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableDetailList!.length, (index) {
+    Map map=Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen: false).tableDetailList![index];
+    return DataRow(
+      selected: true,
+      cells: List.generate(Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableColumnName!.length, (index) {
+        return DataCell(Text(map[Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableColumnName![index]].toString()));
+
+      })
+
+    );
+
+
+  }
+  );
+  TableDetailPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,65 +37,16 @@ class TableDetailPage extends StatelessWidget {
       appBar:AppBar(
         title: Text("Table Details"),
       ),
-          body:Column(
-            children: [
-              SizedBox(
-                  height: ScreenConfig.blockHeight*10,
-                  width: ScreenConfig.screenWidth,
-                  child: Table(
-                    children: [
-                      TableRow(
-                          children: [
-                            SizedBox(
-                              height: ScreenConfig.blockHeight*10,
-                              child: ListView.builder(
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: Provider.of<DatabaseProvider>(context,listen:false).tableColumnName!.length,
-                                  itemBuilder: (context,index){
-                                    return Text((Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString()));
-                                  }),
-                            )
-                          ]
-                      ),
-                    ],
-                  )
-              ),
-              SizedBox(
-                width:ScreenConfig.screenWidth,
-                height: ScreenConfig.blockHeight*50,
-                child: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: Provider.of<DatabaseProvider>(context,listen:false).tableDetailList!.length,
-                    itemBuilder: (context,index){
-                      Map map=Provider.of<DatabaseProvider>(context,listen:false).tableDetailList![index];
-                      print(map);
-                      return SizedBox(
-                        height: ScreenConfig.blockHeight*5,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: Provider.of<DatabaseProvider>(context,listen:false).tableColumnName!.length,
-                          itemBuilder: (context,i){
-                            return Padding(
-                                padding: EdgeInsets.only(right: 8.0)
-                                ,child: Text(map[Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![i]].toString()));
-                          }),);
-                      // return ListView.builder(
-                      //     scrollDirection: Axis.horizontal,
-                      //     shrinkWrap: true,
-                      //     itemCount: Provider.of<DatabaseProvider>(context,listen:false).tableColumnName!.length,
-                      //     itemBuilder: (context,index){
-                      //       print(map[Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index]]);
-                      //       return Container();
-                      //         //Text(map[Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index]]);
-                      //
-                      //
-                      //     });
-                    }),
-              )
-            ],
-          )
+          body:SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: DataTable(
+                  //sortColumnIndex: 1,
+                  //sortAscending: false,
+                columns: list, rows: TableDetaillist)),
+          ),
     );
+
   }
 }
