@@ -4,31 +4,21 @@ import 'package:flutter_sqllite_table_view/config/screen_config.dart';
 import 'package:flutter_sqllite_table_view/config/values.dart';
 import 'package:flutter_sqllite_table_view/providers/database_provider.dart';
 import 'package:provider/provider.dart';
-class TableDetailPage extends StatelessWidget {
-  List<DataColumn> list=List.generate(Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableColumnName!.length, (index) {
-    return DataColumn(
-        onSort: (columnIndex,sortAscending){
-          print(Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableColumnName![columnIndex]);
-          print(sortAscending);
-
-        },
-        label: Text(Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableColumnName![index].toString()));
-  });
-  List<DataRow> TableDetaillist=List.generate(Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableDetailList!.length, (index) {
+class TableDetailPage extends StatefulWidget{
+  @override
+  State<StatefulWidget> createState() {
+    return _TableDetailPage();
+  }
+}
+class _TableDetailPage extends State<TableDetailPage> {
+  List<Map> tableDetail=List.generate(Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableDetailList!.length, (index) {
     Map map=Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen: false).tableDetailList![index];
-    return DataRow(
-      selected: true,
-      cells: List.generate(Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableColumnName!.length, (index) {
-        return DataCell(Text(map[Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableColumnName![index]].toString()));
-
-      })
-
-    );
-
-
+    return map;
   }
   );
-  TableDetailPage({Key? key}) : super(key: key);
+  int _currentSortColumn = 0;
+  bool _isAscending = true;
+  _TableDetailPage({Key? key}) ;
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +32,44 @@ class TableDetailPage extends StatelessWidget {
             child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
-                  //sortColumnIndex: 1,
-                  //sortAscending: false,
-                columns: list, rows: TableDetaillist)),
+                    sortColumnIndex: _currentSortColumn,
+                    sortAscending: _isAscending,
+                columns: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName!.length, (index) {
+                  return DataColumn(
+                      onSort: (columnIndex,sortAscending){
+                        print(sortAscending);
+                        setState(() {
+                          String cName=Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![columnIndex];
+                          _currentSortColumn = columnIndex;
+                          if (_isAscending == true) {
+                            _isAscending = false;
+                            // sort the product list in Ascending, order by Price
+                            tableDetail.sort((productA, productB) =>
+                                productB[cName].compareTo(productA[cName]));
+                          } else {
+                            _isAscending = true;
+                            // sort the product list in Descending, order by Price
+                            tableDetail.sort((productA, productB) =>
+                                productA[cName].compareTo(productB[cName]));
+                          }
+                        });
+
+
+                      },
+                      label: Text(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString()));
+                }), rows: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableDetailList!.length, (index) {
+                  var tableDetailRow=tableDetail[index];
+                  return DataRow(
+                      selected: true,
+                      cells: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName!.length, (index) {
+                        return DataCell(Text(tableDetailRow[Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index]].toString()??"0"));
+                      })
+
+                  );
+
+
+                }
+                ))),
           ),
     );
 
