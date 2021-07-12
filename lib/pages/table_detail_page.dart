@@ -11,9 +11,9 @@ class TableDetailPage extends StatefulWidget{
   }
 }
 class _TableDetailPage extends State<TableDetailPage> {
-  List<Map> tableDetail=List.generate(Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableDetailList!.length, (index) {
-    Map map=Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen: false).tableDetailList![index];
-    return map;
+   List<Map> tableDetail=List.generate(Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableDetailList!.length, (index) {
+  Map map=Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen: false).tableDetailList![index];
+  return map;
   }
   );
   int _currentSortColumn = 0;
@@ -26,6 +26,17 @@ class _TableDetailPage extends State<TableDetailPage> {
     return Scaffold(
       appBar:AppBar(
         title: Text("Table Details"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.more_vert,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              // do something
+            },
+          )
+        ],
       ),
           body:SingleChildScrollView(
             scrollDirection: Axis.vertical,
