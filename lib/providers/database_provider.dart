@@ -8,8 +8,8 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseProvider extends ChangeNotifier{
-  List? tableDetailList;
-  List? tableColumnName;
+  List tableDetailList=[];
+  List<dynamic> tableColumnName=[];
   List<MenuTileModel> list=[];
   init()async{
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
@@ -35,6 +35,14 @@ class DatabaseProvider extends ChangeNotifier{
     List<dynamic> list=await db.rawQuery(query);
     return list;
   }
+  Future<void> removeColumn(String columnName)async {
+    if(tableColumnName.isNotEmpty)
+    tableColumnName!..remove(columnName);
+    for(int i=0;i<tableDetailList!.length;i++){
+      //Map map=tableDetailList![i];
+     // print(map..remove(columnName));
+    }
+    }
   Future<void> getTable(String tableName)async{
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String databasePath = join(appDocDir.path, 'asset_EasySoftDataFile.db');
@@ -42,10 +50,18 @@ class DatabaseProvider extends ChangeNotifier{
     String query = '''
       SELECT * FROM $tableName;
       ''';
-    tableDetailList=await db.rawQuery(query);
+    tableDetailList.clear();
+    List list=await db.rawQuery(query);
+    List listCopy=List.from(list);
+    for(int i=0;i<listCopy.length;i++){
+      print(listCopy[i]);
+      if(listCopy[i]!=null){
+        tableDetailList.add(listCopy[i]);
+      }
+    }
+    tableColumnName.clear();
     Map map=tableDetailList![0];
-    tableColumnName=map.keys as List;
-
+   map.forEach((key, value) {tableColumnName.add(key);});
   }
   Future<void> getProjectMenuTable()async{
     Directory appDocDir = await getApplicationDocumentsDirectory();

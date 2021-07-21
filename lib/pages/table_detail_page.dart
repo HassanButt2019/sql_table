@@ -1,14 +1,18 @@
+import 'dart:io';
+import 'package:sqflite/sqflite.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sqllite_table_view/config/screen_config.dart';
 import 'package:flutter_sqllite_table_view/config/values.dart';
+import 'package:flutter_sqllite_table_view/pages/visibility_page.dart';
 import 'package:flutter_sqllite_table_view/providers/database_provider.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:printing/printing.dart';
-
 import 'column_slider.dart';
+import 'package:path/path.dart' show join;
 class TableDetailPage extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
@@ -26,14 +30,16 @@ class _TableDetailPage extends State<TableDetailPage> {
   );
   int _currentSortColumn = 0;
   bool _isAscending = true;
+
   _TableDetailPage({Key? key}) ;
 
   @override
   Widget build(BuildContext context) {
     ScreenConfig().init(context);
+    final args = ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
       appBar:AppBar(
-        title: Text("Table Details"),
+        title: Text(args),
         actions: <Widget>[
           PopupMenuButton<int>(
               onSelected: (item)=>onSelected(context,item),
@@ -56,6 +62,7 @@ class _TableDetailPage extends State<TableDetailPage> {
             child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
+                    showCheckboxColumn:false,
                     sortColumnIndex: _currentSortColumn,
                     sortAscending: _isAscending,
                 columns: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName!.length, (index) {
@@ -80,7 +87,41 @@ class _TableDetailPage extends State<TableDetailPage> {
 
 
                       },
-                      label: Text(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString()));
+                      label: InkWell(
+                        onLongPress: ()async{
+                          print("on long press is pressed");
+                          final value = await showDialog<bool>(
+                            context: context,
+                            builder: (context) =>VisibilityPage(columnName: Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString()),
+                          );
+
+                          // execution of this code continues when the dialog was closed (popped)
+
+                          // note that the result can also be null, so check it
+                          // (back button or pressed outside of the dialog)
+                          if (value != null) {
+                            Directory appDocDir = await getApplicationDocumentsDirectory();
+                            String databasePath = join(appDocDir.path, 'asset_EasySoftDataFile.db');
+                            var db = await openDatabase(databasePath);
+                            if(value==true){
+                              Map<String,dynamic> map={"layout":"dataTable",
+                                "column_name":Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString(),
+                                "visibility":"0"
+                              };
+                              print(await db.insert('Setting', map));
+                              Provider.of<DatabaseProvider>(context,listen: false).removeColumn(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString()).then((value) {
+                                setState(() {
+
+                                });
+                              });
+
+
+
+                            }
+                          }
+                        },
+                        child: Text(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString()),
+                      ));
                 }), rows: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableDetailList!.length, (index) {
                   var tableDetailRow=tableDetail[index];
                   return DataRow(
@@ -141,7 +182,6 @@ class _TableDetailPage extends State<TableDetailPage> {
 
             ])
         );
-        print(doc.runtimeType);
         Navigator.pushNamed(context, '/pdf_preview_page',arguments: doc);
         break;
       case 1:
@@ -159,7 +199,7 @@ class _TableDetailPage extends State<TableDetailPage> {
 
     // this will contain the result from Navigator.pop(context, result)
     final selectedTotalColumns = await showDialog<double>(
-      context: context,
+      context: context as BuildContext,
       builder: (context) => ColumnSlider(totalColumns: column,),
     );
 
