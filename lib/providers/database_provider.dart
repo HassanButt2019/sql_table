@@ -12,6 +12,7 @@ class DatabaseProvider extends ChangeNotifier{
   List tableDetailList=[];
   List<dynamic> tableColumnName=[];
   List<MenuTileModel> list=[];
+  List groupSetList=[];
   init()async{
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, 'asset_EasySoftDataFile.db');
@@ -46,11 +47,12 @@ class DatabaseProvider extends ChangeNotifier{
     }
     groupBy(String columnName){
     Set groupSet=Set();
+    groupSet.clear();
    for(int i=0;i<tableDetailList.length;i++){
      groupSet.add(tableDetailList[i][columnName]);
    }
    //Set sortSet=SplayTreeSet.from(groupSet,(a, b) => a.compareTo(b) );
-   final groupSetList=groupSet.toList();
+   groupSetList=groupSet.toList();
    groupSetList.sort();
     print(groupSetList);
     }

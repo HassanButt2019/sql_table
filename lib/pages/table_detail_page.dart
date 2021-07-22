@@ -119,6 +119,7 @@ class _TableDetailPage extends State<TableDetailPage> {
 
                             }else if(value==2){
                               Provider.of<DatabaseProvider>(context,listen: false).groupBy(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString());
+                              Navigator.pushNamed(context, '/group_by_page',arguments: Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString());
 
                             }
                           }
@@ -137,7 +138,8 @@ class _TableDetailPage extends State<TableDetailPage> {
 
 
                 }
-                ))),
+                )
+                )),
           ):GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: column.round()),
               itemCount: Provider.of<DatabaseProvider>(context,listen: false).tableDetailList!.length,
