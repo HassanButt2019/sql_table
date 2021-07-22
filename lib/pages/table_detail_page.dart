@@ -90,7 +90,7 @@ class _TableDetailPage extends State<TableDetailPage> {
                       label: InkWell(
                         onLongPress: ()async{
                           print("on long press is pressed");
-                          final value = await showDialog<bool>(
+                          final value = await showDialog<int>(
                             context: context,
                             builder: (context) =>VisibilityPage(columnName: Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString()),
                           );
@@ -103,7 +103,7 @@ class _TableDetailPage extends State<TableDetailPage> {
                             Directory appDocDir = await getApplicationDocumentsDirectory();
                             String databasePath = join(appDocDir.path, 'asset_EasySoftDataFile.db');
                             var db = await openDatabase(databasePath);
-                            if(value==true){
+                            if(value==1){
                               Map<String,dynamic> map={"layout":"dataTable",
                                 "column_name":Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString(),
                                 "visibility":"0"
@@ -116,6 +116,9 @@ class _TableDetailPage extends State<TableDetailPage> {
                               });
 
 
+
+                            }else if(value==2){
+                              Provider.of<DatabaseProvider>(context,listen: false).groupBy(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString());
 
                             }
                           }

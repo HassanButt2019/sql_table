@@ -10,14 +10,22 @@ class VisibilityPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(columnName),
-      content: Wrap(
+      content: Column(
         children: [
           ElevatedButton(onPressed: (){
-            Navigator.pop(context, false);
-          }, child: Text("Visible")),
-          ElevatedButton(onPressed: (){
-            Navigator.pop(context, true);
-          }, child: Text("Hide"))
+            Navigator.pop(context, 2);
+          }, child: Text("Group By")),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ElevatedButton(onPressed: (){
+                Navigator.pop(context, 0);
+              }, child: Text("Visible")),
+              ElevatedButton(onPressed: (){
+                Navigator.pop(context, 1);
+              }, child: Text("Hide"))
+            ],
+          ),
         ],
       ),
     );

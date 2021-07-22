@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -43,6 +44,16 @@ class DatabaseProvider extends ChangeNotifier{
      // print(map..remove(columnName));
     }
     }
+    groupBy(String columnName){
+    Set groupSet=Set();
+   for(int i=0;i<tableDetailList.length;i++){
+     groupSet.add(tableDetailList[i][columnName]);
+   }
+   //Set sortSet=SplayTreeSet.from(groupSet,(a, b) => a.compareTo(b) );
+   final groupSetList=groupSet.toList();
+   groupSetList.sort();
+    print(groupSetList);
+    }
   Future<void> getTable(String tableName)async{
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String databasePath = join(appDocDir.path, 'asset_EasySoftDataFile.db');
@@ -54,7 +65,6 @@ class DatabaseProvider extends ChangeNotifier{
     List list=await db.rawQuery(query);
     List listCopy=List.from(list);
     for(int i=0;i<listCopy.length;i++){
-      print(listCopy[i]);
       if(listCopy[i]!=null){
         tableDetailList.add(listCopy[i]);
       }
@@ -74,7 +84,5 @@ class DatabaseProvider extends ChangeNotifier{
    for(int i=0;i<list.length;i++){
 
    }
-
-
   }
 }
