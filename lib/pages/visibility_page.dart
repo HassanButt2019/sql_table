@@ -36,7 +36,7 @@ class _VisibilityPage extends State<VisibilityPage> {
     dropdownValue = newValue!;
     });
     },
-    items: <String>['SUM', 'GROUPBY', 'VISIBLE', 'HIDE','MIN','MAX']
+    items: <String>['SUM', 'GROUPBY', 'VISIBLE', 'HIDE','MIN','MAX','COUNT']
         .map<DropdownMenuItem<String>>((String value) {
     return DropdownMenuItem<String>(
     value: value,
@@ -58,6 +58,8 @@ class _VisibilityPage extends State<VisibilityPage> {
               Navigator.pop(context, 4);
             }else if(dropdownValue=='MAX'){
               Navigator.pop(context, 5);
+            }else if(dropdownValue=='COUNT'){
+              Navigator.pop(context, 6);
             }
           }, child: Text("OK")),
         ],

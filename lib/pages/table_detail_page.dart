@@ -34,9 +34,11 @@ class _TableDetailPage extends State<TableDetailPage> {
   bool showSum=false;
   bool showMin=false;
   bool showMax=false;
+  bool showCount=false;
   num sum=0;
   num? min;
   num? max;
+  num? count;
   int? sumColumnIndex;
   _TableDetailPage({Key? key}) ;
 
@@ -131,6 +133,7 @@ class _TableDetailPage extends State<TableDetailPage> {
                             }else if(value==3){
                               sum= Provider.of<DatabaseProvider>(context,listen: false).getSumOfColumn(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index],index);
                               setState(() {
+                                showCount=false;
                                 showSum=true;
                                 showMin=false;
                                 showMax=false;
@@ -142,6 +145,7 @@ class _TableDetailPage extends State<TableDetailPage> {
                               min=Provider.of<DatabaseProvider>(context,listen:false).getMinValue(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index]);
                               //print(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index]);
                               setState(() {
+                                showCount=false;
                                 showMin=true;
                                 showSum=false;
                                 showMax=false;
@@ -151,12 +155,23 @@ class _TableDetailPage extends State<TableDetailPage> {
                             }else if(value==5){
                               max=Provider.of<DatabaseProvider>(context,listen:false).getMaxValue(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index]);
                               setState(() {
+                                showCount=false;
                                 showMin=false;
                                 showSum=false;
                                 showMax=true;
                                 sumColumnIndex=index;
                               });
+                            }else if(value==6){
+                              count=Provider.of<DatabaseProvider>(context,listen:false).getColumnCount(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index]);
+                              setState(() {
+                                showCount=true;
+                                showMin=false;
+                                showSum=false;
+                                showMax=false;
+                                sumColumnIndex=index;
+                              });
                             }
+
                           }
                         },
                         child: Text(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString()),
@@ -281,6 +296,17 @@ class _TableDetailPage extends State<TableDetailPage> {
         cells: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName!.length, (index) {
           if(index==sumColumnIndex){
             return DataCell(Text(max.toString()
+            ));
+          }else{
+            return DataCell(Text(''));
+          }
+        }))));
+  }else if(showCount){
+    tableRowList.add((DataRow(
+        selected: true,
+        cells: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName!.length, (index) {
+          if(index==sumColumnIndex){
+            return DataCell(Text(count.toString()
             ));
           }else{
             return DataCell(Text(''));
