@@ -21,6 +21,12 @@ class _VisibilityPage extends State<VisibilityPage> {
       title: Text(widget.columnName),
       content: Column(
         children: [
+          ElevatedButton(onPressed: (){
+            Navigator.pop(context, 2);
+          }, child: Text('GROUPBY')),
+          ElevatedButton(onPressed: (){
+            Navigator.pop(context, 1);
+          }, child: Text('HIDE')),
     DropdownButton<String>(
     value: dropdownValue,
     icon: const Icon(Icons.arrow_downward),
@@ -36,7 +42,7 @@ class _VisibilityPage extends State<VisibilityPage> {
     dropdownValue = newValue!;
     });
     },
-    items: <String>['SUM', 'GROUPBY', 'VISIBLE', 'HIDE','MIN','MAX','COUNT']
+    items: <String>['SUM','MIN','MAX','COUNT']
         .map<DropdownMenuItem<String>>((String value) {
     return DropdownMenuItem<String>(
     value: value,
@@ -48,12 +54,6 @@ class _VisibilityPage extends State<VisibilityPage> {
           ElevatedButton(onPressed: (){
             if(dropdownValue=='SUM'){
               Navigator.pop(context, 3);
-            }else if(dropdownValue=='GROUPBY'){
-              Navigator.pop(context, 2);
-            }else if(dropdownValue=='VISIBLE'){
-              Navigator.pop(context, 0);
-            }else if(dropdownValue=='HIDE'){
-              Navigator.pop(context, 1);
             }else if(dropdownValue=='MIN'){
               Navigator.pop(context, 4);
             }else if(dropdownValue=='MAX'){
