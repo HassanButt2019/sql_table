@@ -143,4 +143,17 @@ class DatabaseProvider extends ChangeNotifier{
       print('column data is not in numbers');
     }
   }
+  getSearchList(String searchValue,String columnName){
+    List cList=[];
+    List searchList=[];
+    for(int i=0;i<tableDetailList.length;i++){
+      cList.add(tableDetailList[i][columnName]);
+    }
+    //print(cList.contains(int.parse(searchValue)));
+    // cList.forEach((element) {
+    //   if(element.toString().contains(element)){
+    //     print("element is in list");
+    //   }
+    // });
+  }
 }

@@ -101,7 +101,7 @@ class _TableDetailPage extends State<TableDetailPage> {
                           print("on long press is pressed");
                           final value = await showDialog<int>(
                             context: context,
-                            builder: (context) =>VisibilityPage(columnName: Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString()),
+                            builder: (context) =>VisibilityPage(columnName: Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString(),columnIndex: index,),
                           );
 
                           // execution of this code continues when the dialog was closed (popped)
