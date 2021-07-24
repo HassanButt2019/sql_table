@@ -30,7 +30,10 @@ class _TableDetailPage extends State<TableDetailPage> {
   );
   int _currentSortColumn = 0;
   bool _isAscending = true;
-
+  List<DataRow> tableRowList=[];
+  bool showSum=false;
+  num sum=0;
+  int? sumColumnIndex;
   _TableDetailPage({Key? key}) ;
 
   @override
@@ -122,26 +125,19 @@ class _TableDetailPage extends State<TableDetailPage> {
                               Navigator.pushNamed(context, '/group_by_page',arguments: Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString());
 
                             }else if(value==3){
-                              Provider.of<DatabaseProvider>(context,listen: false).getSumOfColumn(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index]);
-
-                            }
+                              sum= Provider.of<DatabaseProvider>(context,listen: false).getSumOfColumn(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index],index);
+                              setState(() {
+                                showSum=true;
+                                sumColumnIndex=index;
+                                print(index);
+                              });
+                              }
                           }
                         },
                         child: Text(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString()),
                       ));
-                }), rows: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableDetailList!.length, (index) {
-                  var tableDetailRow=tableDetail[index];
-                  return DataRow(
-                      selected: true,
-                      cells: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName!.length, (index) {
-                        return DataCell(Text(tableDetailRow[Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index]].toString()??"0"));
-                      })
-
-                  );
-
-
-                }
-                )
+                }), rows:
+                getTableRows(),
                 )),
           ):GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: column.round()),
@@ -221,5 +217,28 @@ class _TableDetailPage extends State<TableDetailPage> {
         column = selectedTotalColumns;
       });
     }
+  }
+  getTableRows(){
+  tableRowList.clear();
+  for(int i=0;i<Provider.of<DatabaseProvider>(context,listen:false).tableDetailList!.length;i++){
+    var tableDetailRow=tableDetail[i];
+    tableRowList.add(DataRow(
+        selected: true,
+        cells: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName!.length, (index) {
+          return DataCell(Text(tableDetailRow[Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index]].toString()??"0"));
+        })));
+  }
+  if(showSum){
+    tableRowList.add((DataRow(
+        selected: true,
+        cells: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName!.length, (index) {
+          if(index==sumColumnIndex){
+            return DataCell(Text("Sum="+sum.toString()));
+          }else{
+            return DataCell(Text(''));
+          };
+        }))));
+  }
+  return tableRowList;
   }
 }

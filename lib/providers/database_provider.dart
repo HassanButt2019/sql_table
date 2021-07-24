@@ -87,14 +87,14 @@ class DatabaseProvider extends ChangeNotifier{
 
    }
   }
-  getSumOfColumn(dynamic columnName){
+  getSumOfColumn(dynamic columnName,int columnPosition){
     if(tableDetailList[0][columnName].runtimeType==int) {
      List cList=[];
      num sum=0;
       for(int i=0;i<tableDetailList.length;i++){
         sum+=tableDetailList[i][columnName];
       }
-      print(sum);
+      return sum;
     }else{
       print('column data is not in numbers');
     }
