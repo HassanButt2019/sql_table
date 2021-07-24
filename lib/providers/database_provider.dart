@@ -117,4 +117,17 @@ class DatabaseProvider extends ChangeNotifier{
       print('column data is not in numbers');
     }
   }
+  getMaxValue(dynamic columnName){
+    if(tableDetailList[0][columnName].runtimeType==int){
+      print(columnName);
+      List cList=[];
+      for(int i=0;i<tableDetailList.length;i++){
+        cList.add(tableDetailList[i][columnName]);
+      }
+      cList.sort();
+      return cList[cList.length-1];
+    }else{
+      print('column data is not in numbers');
+    }
+  }
 }

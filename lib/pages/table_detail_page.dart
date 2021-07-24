@@ -33,8 +33,10 @@ class _TableDetailPage extends State<TableDetailPage> {
   List<DataRow> tableRowList=[];
   bool showSum=false;
   bool showMin=false;
+  bool showMax=false;
   num sum=0;
   num? min;
+  num? max;
   int? sumColumnIndex;
   _TableDetailPage({Key? key}) ;
 
@@ -131,6 +133,7 @@ class _TableDetailPage extends State<TableDetailPage> {
                               setState(() {
                                 showSum=true;
                                 showMin=false;
+                                showMax=false;
                                 sumColumnIndex=index;
                                 print(index);
                               });
@@ -141,9 +144,18 @@ class _TableDetailPage extends State<TableDetailPage> {
                               setState(() {
                                 showMin=true;
                                 showSum=false;
+                                showMax=false;
                                 sumColumnIndex=index;
                               });
 
+                            }else if(value==5){
+                              max=Provider.of<DatabaseProvider>(context,listen:false).getMaxValue(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index]);
+                              setState(() {
+                                showMin=false;
+                                showSum=false;
+                                showMax=true;
+                                sumColumnIndex=index;
+                              });
                             }
                           }
                         },
@@ -258,6 +270,17 @@ class _TableDetailPage extends State<TableDetailPage> {
         cells: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName!.length, (index) {
           if(index==sumColumnIndex){
             return DataCell(Text(min.toString()
+            ));
+          }else{
+            return DataCell(Text(''));
+          };
+        }))));
+  }else if(showMax){
+    tableRowList.add((DataRow(
+        selected: true,
+        cells: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName!.length, (index) {
+          if(index==sumColumnIndex){
+            return DataCell(Text(max.toString()
             ));
           }else{
             return DataCell(Text(''));
