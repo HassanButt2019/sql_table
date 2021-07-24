@@ -32,7 +32,9 @@ class _TableDetailPage extends State<TableDetailPage> {
   bool _isAscending = true;
   List<DataRow> tableRowList=[];
   bool showSum=false;
+  bool showMin=false;
   num sum=0;
+  num? min;
   int? sumColumnIndex;
   _TableDetailPage({Key? key}) ;
 
@@ -128,10 +130,21 @@ class _TableDetailPage extends State<TableDetailPage> {
                               sum= Provider.of<DatabaseProvider>(context,listen: false).getSumOfColumn(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index],index);
                               setState(() {
                                 showSum=true;
+                                showMin=false;
                                 sumColumnIndex=index;
                                 print(index);
                               });
-                              }
+                              }else if(value==4){
+                              //4 for min
+                              min=Provider.of<DatabaseProvider>(context,listen:false).getMinValue(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index]);
+                              //print(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index]);
+                              setState(() {
+                                showMin=true;
+                                showSum=false;
+                                sumColumnIndex=index;
+                              });
+
+                            }
                           }
                         },
                         child: Text(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString()),
@@ -233,7 +246,19 @@ class _TableDetailPage extends State<TableDetailPage> {
         selected: true,
         cells: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName!.length, (index) {
           if(index==sumColumnIndex){
-            return DataCell(Text("Sum="+sum.toString()));
+            return DataCell(Text(sum.toString()
+                ));
+          }else{
+            return DataCell(Text(''));
+          };
+        }))));
+  }else if(showMin){
+    tableRowList.add((DataRow(
+        selected: true,
+        cells: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName!.length, (index) {
+          if(index==sumColumnIndex){
+            return DataCell(Text(min.toString()
+            ));
           }else{
             return DataCell(Text(''));
           };

@@ -1,5 +1,6 @@
-import 'dart:collection';
+
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -89,7 +90,7 @@ class DatabaseProvider extends ChangeNotifier{
   }
   getSumOfColumn(dynamic columnName,int columnPosition){
     if(tableDetailList[0][columnName].runtimeType==int) {
-     List cList=[];
+
      num sum=0;
       for(int i=0;i<tableDetailList.length;i++){
         sum+=tableDetailList[i][columnName];
@@ -102,5 +103,18 @@ class DatabaseProvider extends ChangeNotifier{
     // for(int i=0;i<tableDetailList.length;i++){
     //   tableDetailList[i][columnName];
     // }
+  }
+  getMinValue(dynamic columnName){
+    if(tableDetailList[0][columnName].runtimeType==int){
+      print(columnName);
+      List cList=[];
+      for(int i=0;i<tableDetailList.length;i++){
+        cList.add(tableDetailList[i][columnName]);
+      }
+      cList.sort();
+      return cList[0];
+    }else{
+      print('column data is not in numbers');
+    }
   }
 }
