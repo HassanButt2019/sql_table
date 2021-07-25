@@ -149,11 +149,30 @@ class DatabaseProvider extends ChangeNotifier{
     for(int i=0;i<tableDetailList.length;i++){
       cList.add(tableDetailList[i][columnName]);
     }
+    cList.forEach((element) {
+      if(element.toString().toLowerCase().contains(searchValue)) {
+        searchList.add(element);
+      }
+
+    });
+    return searchList;
     //print(cList.contains(int.parse(searchValue)));
     // cList.forEach((element) {
     //   if(element.toString().contains(element)){
     //     print("element is in list");
     //   }
     // });
+  }
+  getSearchTable(String columnName,int columnIndex,List searchList){
+    List tableDetailListCopy=tableDetailList;
+    tableDetailList=[];
+    tableDetailList.clear();
+    for(int i=0;i<tableDetailListCopy.length;i++){
+      Map map=tableDetailListCopy[i];
+      if(searchList.contains(map[columnName])){
+        tableDetailList.add(map);
+      }
+    }
+    print(tableDetailList);
   }
 }

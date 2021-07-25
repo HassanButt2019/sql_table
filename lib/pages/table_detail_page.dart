@@ -23,14 +23,8 @@ class _TableDetailPage extends State<TableDetailPage> {
   int layout=0;
   double column=2;
   final doc = pw.Document();
-   List<Map> tableDetail=List.generate(Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableDetailList!.length, (index) {
-  Map map=Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen: false).tableDetailList![index];
-  return map;
-  }
-  );
   int _currentSortColumn = 0;
   bool _isAscending = true;
-  List<DataRow> tableRowList=[];
   bool showSum=false;
   bool showMin=false;
   bool showMax=false;
@@ -45,6 +39,11 @@ class _TableDetailPage extends State<TableDetailPage> {
   @override
   Widget build(BuildContext context) {
     ScreenConfig().init(context);
+    List<Map> tableDetail=List.generate(Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableDetailList!.length, (index) {
+      Map map=Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen: false).tableDetailList![index];
+      return map;
+    }
+    );
     final args = ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
       appBar:AppBar(
@@ -99,7 +98,7 @@ class _TableDetailPage extends State<TableDetailPage> {
                       label: InkWell(
                         onLongPress: ()async{
                           print("on long press is pressed");
-                          final value = await showDialog<int>(
+                          final value = await showDialog(
                             context: context,
                             builder: (context) =>VisibilityPage(columnName: Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString(),columnIndex: index,),
                           );
@@ -108,7 +107,7 @@ class _TableDetailPage extends State<TableDetailPage> {
 
                           // note that the result can also be null, so check it
                           // (back button or pressed outside of the dialog)
-                          if (value != null) {
+                          if (value != null && value.runtimeType==int) {
                             Directory appDocDir = await getApplicationDocumentsDirectory();
                             String databasePath = join(appDocDir.path, 'asset_EasySoftDataFile.db');
                             var db = await openDatabase(databasePath);
@@ -173,6 +172,9 @@ class _TableDetailPage extends State<TableDetailPage> {
                             }
 
                           }
+                          else if (value != null  && value.runtimeType.toString()=="List<dynamic>"){
+                            Provider.of<DatabaseProvider>(context,listen:false).getSearchTable(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString(), index,value);
+                          }
                         },
                         child: Text(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString()),
                       ));
@@ -209,6 +211,11 @@ class _TableDetailPage extends State<TableDetailPage> {
   }
 
   onSelected(BuildContext context, int item) {
+    List<Map> tableDetail=List.generate(Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableDetailList!.length, (index) {
+      Map map=Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen: false).tableDetailList![index];
+      return map;
+    }
+    );
     switch(item){
       case 0:
         doc.addPage(pw.MultiPage(
@@ -259,6 +266,12 @@ class _TableDetailPage extends State<TableDetailPage> {
     }
   }
   getTableRows(){
+    List<Map> tableDetail=List.generate(Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableDetailList!.length, (index) {
+      Map map=Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen: false).tableDetailList![index];
+      return map;
+    }
+    );
+    List<DataRow> tableRowList=[];
   tableRowList.clear();
   for(int i=0;i<Provider.of<DatabaseProvider>(context,listen:false).tableDetailList!.length;i++){
     var tableDetailRow=tableDetail[i];
@@ -269,6 +282,7 @@ class _TableDetailPage extends State<TableDetailPage> {
         })));
   }
   if(showSum){
+
     tableRowList.add((DataRow(
         selected: true,
         cells: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName!.length, (index) {
@@ -304,7 +318,7 @@ class _TableDetailPage extends State<TableDetailPage> {
   }else if(showCount){
     tableRowList.add((DataRow(
         selected: true,
-        cells: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName!.length, (index) {
+        cells: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName.length, (index) {
           if(index==sumColumnIndex){
             return DataCell(Text(count.toString()
             ));
