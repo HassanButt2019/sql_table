@@ -13,13 +13,14 @@ class GroupByPage extends StatefulWidget {
 }
 
 class _GroupByPageState extends State<GroupByPage> {
-  List<Map> tableDetail=List.generate(Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableDetailList!.length, (index) {
-    Map map=Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen: false).tableDetailList![index];
-    return map;
-  }
-  );
+
   @override
   Widget build(BuildContext context) {
+    List<Map> tableDetail=List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableDetailList.length, (index) {
+      Map map=Provider.of<DatabaseProvider>(context,listen: false).tableDetailList[index];
+      return map;
+    }
+    );
     ScreenConfig().init(context);
     final columnName = ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
@@ -32,13 +33,13 @@ class _GroupByPageState extends State<GroupByPage> {
         child: ListView.builder(
           itemCount: Provider.of<DatabaseProvider>(context,listen: false).groupSetList.length,
           itemBuilder: (context,index){
-            return DataTable(columns: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName!.length, (iCol) {
+            return DataTable(columns: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName.length, (iCol) {
               return DataColumn(
                   label: InkWell(
                     child: Text(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![iCol].toString()),
                   ));
             }), rows:
-                getGroupedRows(columnName,index)
+                getGroupedRows(columnName,index,context)
             // List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableDetailList!.length, (iRow) {
             //   var tableDetailRow=tableDetail[iRow];
             //   if(tableDetailRow[columnName].toString()==Provider.of<DatabaseProvider>(context,listen: false).groupSetList[index].toString()){
@@ -67,7 +68,12 @@ class _GroupByPageState extends State<GroupByPage> {
       ),
     );
   }
-  getGroupedRows(String columnName,int index){
+  getGroupedRows(String columnName,int index,BuildContext context){
+    List<Map> tableDetail=List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableDetailList.length, (index) {
+      Map map=Provider.of<DatabaseProvider>(context,listen: false).tableDetailList![index];
+      return map;
+    }
+    );
     List<DataRow> dataRowList=[];
     for(int iRow=0;iRow<Provider.of<DatabaseProvider>(context,listen:false).tableDetailList!.length;iRow++){
       var tableDetailRow=tableDetail[iRow];

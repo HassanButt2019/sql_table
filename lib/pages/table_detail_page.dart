@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter_sqllite_table_view/pages/color_picker_page.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -39,8 +40,8 @@ class _TableDetailPage extends State<TableDetailPage> {
   @override
   Widget build(BuildContext context) {
     ScreenConfig().init(context);
-    List<Map> tableDetail=List.generate(Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableDetailList!.length, (index) {
-      Map map=Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen: false).tableDetailList![index];
+    List<Map> tableDetail=List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableDetailList!.length, (index) {
+      Map map=Provider.of<DatabaseProvider>(context,listen: false).tableDetailList![index];
       return map;
     }
     );
@@ -60,7 +61,10 @@ class _TableDetailPage extends State<TableDetailPage> {
                     child: Text('Grid Layout')),
                 PopupMenuItem<int>(
                     value: 2,
-                    child: Text('Slider'))
+                    child: Text('Slider')),
+                PopupMenuItem<int>(
+                    value: 3,
+                    child: Text('ColorPicker')),
           ]
           ),
         ],
@@ -211,8 +215,8 @@ class _TableDetailPage extends State<TableDetailPage> {
   }
 
   onSelected(BuildContext context, int item) {
-    List<Map> tableDetail=List.generate(Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableDetailList!.length, (index) {
-      Map map=Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen: false).tableDetailList![index];
+    List<Map> tableDetail=List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableDetailList!.length, (index) {
+      Map map=Provider.of<DatabaseProvider>(context,listen: false).tableDetailList![index];
       return map;
     }
     );
@@ -243,8 +247,18 @@ class _TableDetailPage extends State<TableDetailPage> {
       case 2:
         _showTotalColumnPickerDialog();
         break;
+      case 3:
+        print("Color picker");
+        //_showColorPicker();
+        break;
     }
   }
+  // void _showColorPicker()async{
+  //   final selectedTotalColumns = await showDialog<double>(
+  //     context: context as BuildContext,
+  //     builder: (context) => ColorPickerPage()
+  //   );
+  // }
   void _showTotalColumnPickerDialog() async {
     // <-- note the async keyword here
 
@@ -266,26 +280,26 @@ class _TableDetailPage extends State<TableDetailPage> {
     }
   }
   getTableRows(){
-    List<Map> tableDetail=List.generate(Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableDetailList!.length, (index) {
-      Map map=Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen: false).tableDetailList![index];
+    List<Map> tableDetail=List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableDetailList.length, (index) {
+      Map map=Provider.of<DatabaseProvider>(context,listen: false).tableDetailList[index];
       return map;
     }
     );
     List<DataRow> tableRowList=[];
   tableRowList.clear();
-  for(int i=0;i<Provider.of<DatabaseProvider>(context,listen:false).tableDetailList!.length;i++){
+  for(int i=0;i<Provider.of<DatabaseProvider>(context,listen:false).tableDetailList.length;i++){
     var tableDetailRow=tableDetail[i];
     tableRowList.add(DataRow(
         selected: true,
-        cells: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName!.length, (index) {
-          return DataCell(Text(tableDetailRow[Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index]].toString()??"0"));
+        cells: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName.length, (index) {
+          return DataCell(Text(tableDetailRow[Provider.of<DatabaseProvider>(context,listen:false).tableColumnName[index]].toString()));
         })));
   }
   if(showSum){
 
     tableRowList.add((DataRow(
         selected: true,
-        cells: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName!.length, (index) {
+        cells: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName.length, (index) {
           if(index==sumColumnIndex){
             return DataCell(Text(sum.toString()
                 ));
@@ -296,7 +310,7 @@ class _TableDetailPage extends State<TableDetailPage> {
   }else if(showMin){
     tableRowList.add((DataRow(
         selected: true,
-        cells: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName!.length, (index) {
+        cells: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName.length, (index) {
           if(index==sumColumnIndex){
             return DataCell(Text(min.toString()
             ));
@@ -307,7 +321,7 @@ class _TableDetailPage extends State<TableDetailPage> {
   }else if(showMax){
     tableRowList.add((DataRow(
         selected: true,
-        cells: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName!.length, (index) {
+        cells: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName.length, (index) {
           if(index==sumColumnIndex){
             return DataCell(Text(max.toString()
             ));

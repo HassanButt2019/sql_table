@@ -40,8 +40,8 @@ class DatabaseProvider extends ChangeNotifier{
   }
   Future<void> removeColumn(String columnName)async {
     if(tableColumnName.isNotEmpty)
-    tableColumnName!..remove(columnName);
-    for(int i=0;i<tableDetailList!.length;i++){
+    tableColumnName..remove(columnName);
+    for(int i=0;i<tableDetailList.length;i++){
       //Map map=tableDetailList![i];
      // print(map..remove(columnName));
     }
@@ -73,7 +73,7 @@ class DatabaseProvider extends ChangeNotifier{
       }
     }
     tableColumnName.clear();
-    Map map=tableDetailList![0];
+    Map map=tableDetailList[0];
    map.forEach((key, value) {tableColumnName.add(key);});
   }
   Future<void> getProjectMenuTable()async{
