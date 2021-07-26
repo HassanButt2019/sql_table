@@ -1,5 +1,7 @@
+import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sqllite_table_view/config/screen_config.dart';
 
 class ColorPickerPage extends StatefulWidget {
   const ColorPickerPage({Key? key}) : super(key: key);
@@ -13,48 +15,46 @@ class _ColorPickerPageState extends State<ColorPickerPage> {
   Color currentColor = Color(0xff443a49);
   @override
   Widget build(BuildContext context) {
-    return Container();
-    // return AlertDialog(
-    //   title: const Text('Pick a color!'),
-    //   content: SingleChildScrollView(
-    //     child: ColorPicker(
-    //       pickerColor: pickerColor,
-    //       onColorChanged: (Color? color){
-    //         print(color);
-    //
-    //       },
-    //       showLabel: true,
-    //       pickerAreaHeightPercent: 0.8,
-    //     ),
-    //     // Use Material color picker:
-    //     //
-    //     // child: MaterialPicker(
-    //     //   pickerColor: pickerColor,
-    //     //   onColorChanged: changeColor,
-    //     //   showLabel: true, // only on portrait mode
-    //     // ),
-    //     //
-    //     // Use Block color picker:
-    //     //
-    //     // child: BlockPicker(
-    //     //   pickerColor: currentColor,
-    //     //   onColorChanged: changeColor,
-    //     // ),
-    //     //
-    //     // child: MultipleChoiceBlockPicker(
-    //     //   pickerColors: currentColors,
-    //     //   onColorsChanged: changeColors,
-    //     // ),
-    //   ),
-    //   actions: <Widget>[
-    //     TextButton(
-    //       child: const Text('Got it'),
-    //       onPressed: () {
-    //         setState(() => currentColor = pickerColor);
-    //         Navigator.pop(context,0.0);
-    //       },
-    //     ),
-    //   ],
-    // );
+    ScreenConfig().init(context);
+    return AlertDialog(
+      title: const Text('Pick a color!'),
+      content:  SizedBox(
+        width: ScreenConfig.screenWidth,
+        height: ScreenConfig.screenHeight,
+        child: SingleChildScrollView(
+          child: Card(
+            elevation: 2,
+            child: ColorPicker(
+              // Use the screenPickerColor as start color.
+              color: pickerColor,
+              // Update the screenPickerColor using the callback.
+              onColorChanged: (Color color){
+                print(color);
+              },
+              width: 44,
+              height: 44,
+              borderRadius: 22,
+              heading: Text(
+                'Select color',
+                style: Theme.of(context).textTheme.headline5,
+              ),
+              subheading: Text(
+                'Select color shade',
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
+            ),
+          ),
+        ),
+      ),
+      actions: <Widget>[
+        TextButton(
+          child: const Text('Got it'),
+          onPressed: () {
+            setState(() => currentColor = pickerColor);
+            Navigator.pop(context,0.0);
+          },
+        ),
+      ],
+    );
   }
 }

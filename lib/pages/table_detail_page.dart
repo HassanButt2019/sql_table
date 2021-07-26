@@ -249,22 +249,23 @@ class _TableDetailPage extends State<TableDetailPage> {
         break;
       case 3:
         print("Color picker");
-        //_showColorPicker();
+        _showColorPicker();
         break;
     }
   }
-  // void _showColorPicker()async{
-  //   final selectedTotalColumns = await showDialog<double>(
-  //     context: context as BuildContext,
-  //     builder: (context) => ColorPickerPage()
-  //   );
-  // }
+  void _showColorPicker()async{
+    final selectedColor = await showDialog<double>(
+      context: context,
+      builder: (context) => ColorPickerPage()
+    );
+    print(selectedColor);
+  }
   void _showTotalColumnPickerDialog() async {
     // <-- note the async keyword here
 
     // this will contain the result from Navigator.pop(context, result)
     final selectedTotalColumns = await showDialog<double>(
-      context: context as BuildContext,
+      context: context,
       builder: (context) => ColumnSlider(totalColumns: column,),
     );
 
