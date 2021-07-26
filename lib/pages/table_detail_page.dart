@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter_sqllite_table_view/pages/color_picker_page.dart';
 import 'package:sqflite/sqflite.dart';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sqllite_table_view/config/screen_config.dart';
@@ -35,6 +34,7 @@ class _TableDetailPage extends State<TableDetailPage> {
   num? max;
   num? count;
   int? sumColumnIndex;
+  Color backgroundColr=Color(0xffffffff);
   _TableDetailPage({Key? key}) ;
 
   @override
@@ -47,6 +47,7 @@ class _TableDetailPage extends State<TableDetailPage> {
     );
     final args = ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
+      backgroundColor: backgroundColr,
       appBar:AppBar(
         title: Text(args),
         actions: <Widget>[
@@ -254,11 +255,13 @@ class _TableDetailPage extends State<TableDetailPage> {
     }
   }
   void _showColorPicker()async{
-    final selectedColor = await showDialog<double>(
+    final selectedColor = await showDialog<Color>(
       context: context,
       builder: (context) => ColorPickerPage()
     );
-    print(selectedColor);
+    setState(() {
+     backgroundColr=selectedColor!;
+    });
   }
   void _showTotalColumnPickerDialog() async {
     // <-- note the async keyword here

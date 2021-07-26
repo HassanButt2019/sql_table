@@ -29,7 +29,7 @@ class _ColorPickerPageState extends State<ColorPickerPage> {
               color: pickerColor,
               // Update the screenPickerColor using the callback.
               onColorChanged: (Color color){
-                print(color);
+                currentColor=color;
               },
               width: 44,
               height: 44,
@@ -50,8 +50,7 @@ class _ColorPickerPageState extends State<ColorPickerPage> {
         TextButton(
           child: const Text('Got it'),
           onPressed: () {
-            setState(() => currentColor = pickerColor);
-            Navigator.pop(context,0.0);
+            Navigator.pop(context,currentColor);
           },
         ),
       ],
