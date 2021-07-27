@@ -20,6 +20,11 @@ class TableDetailPage extends StatefulWidget{
   }
 }
 class _TableDetailPage extends State<TableDetailPage> {
+  List<Map> tableDetail=List.generate(Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableDetailList!.length, (index) {
+    Map map=Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen: false).tableDetailList![index];
+    return map;
+  }
+  );
   int layout=0;
   double column=2;
   final doc = pw.Document();
@@ -40,11 +45,7 @@ class _TableDetailPage extends State<TableDetailPage> {
   @override
   Widget build(BuildContext context) {
     ScreenConfig().init(context);
-    List<Map> tableDetail=List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableDetailList!.length, (index) {
-      Map map=Provider.of<DatabaseProvider>(context,listen: false).tableDetailList![index];
-      return map;
-    }
-    );
+
     final args = ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
       backgroundColor: backgroundColr,
@@ -223,11 +224,6 @@ class _TableDetailPage extends State<TableDetailPage> {
   }
 
   onSelected(BuildContext context, int item) {
-    List<Map> tableDetail=List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableDetailList!.length, (index) {
-      Map map=Provider.of<DatabaseProvider>(context,listen: false).tableDetailList![index];
-      return map;
-    }
-    );
     switch(item){
       case 0:
         doc.addPage(pw.MultiPage(
@@ -291,11 +287,6 @@ class _TableDetailPage extends State<TableDetailPage> {
     }
   }
   getTableRows(){
-    List<Map> tableDetail=List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableDetailList.length, (index) {
-      Map map=Provider.of<DatabaseProvider>(context,listen: false).tableDetailList[index];
-      return map;
-    }
-    );
     List<DataRow> tableRowList=[];
   tableRowList.clear();
   for(int i=0;i<Provider.of<DatabaseProvider>(context,listen:false).tableDetailList.length;i++){
