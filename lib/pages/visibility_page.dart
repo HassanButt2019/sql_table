@@ -66,6 +66,9 @@ class _VisibilityPage extends State<VisibilityPage> {
           ElevatedButton(onPressed: (){
             Navigator.pop(context, 1);
           }, child: Text('HIDE')),
+          ElevatedButton(onPressed: (){
+            Navigator.pop(context, 7);
+          }, child: Text('Running Average')),
     DropdownButton<String>(
     value: dropdownValue,
     icon: const Icon(Icons.arrow_downward),

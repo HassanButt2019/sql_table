@@ -75,6 +75,8 @@ class _TableDetailPage extends State<TableDetailPage> {
             child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
+                  // showBottomBorder: true,
+                  // dividerThickness: 5.0,
                     showCheckboxColumn:false,
                     sortColumnIndex: _currentSortColumn,
                     sortAscending: _isAscending,
@@ -174,6 +176,11 @@ class _TableDetailPage extends State<TableDetailPage> {
                                 showMax=false;
                                 sumColumnIndex=index;
                               });
+                            }else if(value==7){
+                              Provider.of<DatabaseProvider>(context,listen:false).runningSum(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName[index]);
+                            setState(() {
+
+                            });
                             }
 
                           }

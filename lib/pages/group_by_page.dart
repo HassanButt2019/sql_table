@@ -81,7 +81,7 @@ class _GroupByPageState extends State<GroupByPage> {
         dataRowList.add(DataRow(
             selected: true,
             cells: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName!.length, (index) {
-              return DataCell(Text(tableDetailRow[Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index]].toString()??"0"));
+              return DataCell(Text(tableDetailRow[Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index]].toString()));
             })
 
         ));

@@ -1,7 +1,5 @@
 
 import 'dart:io';
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sqllite_table_view/menu_tile_model.dart';
@@ -174,5 +172,33 @@ class DatabaseProvider extends ChangeNotifier{
       }
     }
     print(tableDetailList);
+  }
+  runningSum(String columName){
+    tableDetailList=List.from(tableDetailList);
+      List cList = [];
+      List tableRunningDetailList=[];
+      for (int i = 0; i < tableDetailList.length; i++) {
+        cList.add(tableDetailList[i][columName]);
+      }
+      if(cList[0].runtimeType==int){
+        int sum=0;
+        tableRunningDetailList.clear();
+        Map map=Map.from(tableDetailList[0]);
+        map["Running Average"]=tableDetailList[0][columName];
+        sum=tableDetailList[0][columName];
+        tableRunningDetailList.add(map);
+        tableColumnName.add("Running Average");
+        for(int j=1;j<tableDetailList.length;j++){
+          Map map=Map.from(tableDetailList[j]);
+          map["Running Average"]=sum+tableDetailList[j][columName];
+          sum=map["Running Average"];
+          tableRunningDetailList.add(map);
+        }
+        print(tableRunningDetailList);
+        tableDetailList=tableRunningDetailList;
+      }else{
+        print("column contains string");
+      }
+
   }
 }
