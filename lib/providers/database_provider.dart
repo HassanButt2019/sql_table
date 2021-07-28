@@ -142,11 +142,14 @@ class DatabaseProvider extends ChangeNotifier{
     }
   }
   getSearchList(String searchValue,String columnName){
-    List cList=[];
+    Set set=Set();
     List searchList=[];
+    set.clear();
+    searchList.clear();
     for(int i=0;i<tableDetailList.length;i++){
-      cList.add(tableDetailList[i][columnName]);
+      set.add(tableDetailList[i][columnName]);
     }
+    List cList=set.toList();
     cList.forEach((element) {
       if(element.toString().toLowerCase().contains(searchValue)) {
         searchList.add(element);

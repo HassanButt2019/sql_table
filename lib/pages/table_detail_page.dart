@@ -78,6 +78,7 @@ class _TableDetailPage extends State<TableDetailPage> {
                 child: DataTable(
                   // showBottomBorder: true,
                   // dividerThickness: 5.0,
+                    decoration:UnderlineTabIndicator(borderSide: BorderSide(color: Colors.black, style: BorderStyle.solid)) ,
                     showCheckboxColumn:false,
                     sortColumnIndex: _currentSortColumn,
                     sortAscending: _isAscending,
@@ -180,6 +181,11 @@ class _TableDetailPage extends State<TableDetailPage> {
                             }else if(value==7){
                               Provider.of<DatabaseProvider>(context,listen:false).runningSum(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName[index]);
                             setState(() {
+                              tableDetail=List.generate(Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableDetailList!.length, (index) {
+                                Map map=Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen: false).tableDetailList![index];
+                                return map;
+                              }
+                              );
 
                             });
                             }
@@ -187,6 +193,14 @@ class _TableDetailPage extends State<TableDetailPage> {
                           }
                           else if (value != null  && value.runtimeType.toString()=="List<dynamic>"){
                             Provider.of<DatabaseProvider>(context,listen:false).getSearchTable(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString(), index,value);
+                          setState(() {
+                            tableDetail=List.generate(Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableDetailList!.length, (index) {
+                              Map map=Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen: false).tableDetailList![index];
+                              return map;
+                            }
+                            );
+
+                          });
                           }
                         },
                         child: Text(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString()),
