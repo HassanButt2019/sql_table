@@ -20,8 +20,8 @@ class TableDetailPage extends StatefulWidget{
   }
 }
 class _TableDetailPage extends State<TableDetailPage> {
-  List<Map> tableDetail=List.generate(Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableDetailList!.length, (index) {
-    Map map=Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen: false).tableDetailList![index];
+  List<Map> tableDetail=List.generate(Provider.of<DatabaseProvider>(Values.navigatorKey.currentContext as BuildContext,listen:false).tableDetailList.length, (index) {
+    Map map=Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen: false).tableDetailList[index];
     return map;
   }
   );
@@ -39,175 +39,200 @@ class _TableDetailPage extends State<TableDetailPage> {
   num? max;
   num? count;
   int? sumColumnIndex;
-  Color backgroundColr=Color(0xffffffff);
+  Color backgroundColr=Colors.blue;
+  int? selectedIndex;
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController _searchController = TextEditingController();
   _TableDetailPage({Key? key}) ;
 
   @override
   Widget build(BuildContext context) {
     ScreenConfig().init(context);
-
+  
     final args = ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
-      backgroundColor: backgroundColr,
       appBar:AppBar(
         title: Text(args),
         actions: <Widget>[
-          PopupMenuButton<int>(
-              onSelected: (item)=>onSelected(context,item),
-              itemBuilder: (context)=>[
-            PopupMenuItem<int>(
-                value: 0,
-                child: Text('Print')),
-                PopupMenuItem<int>(
-                    value: 1,
-                    child: Text('Grid Layout')),
-                PopupMenuItem<int>(
-                    value: 2,
-                    child: Text('Slider')),
-                PopupMenuItem<int>(
-                    value: 3,
-                    child: Text('ColorPicker')),
-          ]
-          ),
         ],
       ),
           body:(layout==0)?SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: DataTable(
-                  // showBottomBorder: true,
-                  // dividerThickness: 5.0,
-                    decoration:UnderlineTabIndicator(borderSide: BorderSide(color: Colors.black, style: BorderStyle.solid)) ,
-                    showCheckboxColumn:false,
-                    sortColumnIndex: _currentSortColumn,
-                    sortAscending: _isAscending,
-                columns: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName!.length, (index) {
-                  return DataColumn(
-                      onSort: (columnIndex,sortAscending){
-                        print(sortAscending);
-                        setState(() {
-                          String cName=Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![columnIndex];
-                          _currentSortColumn = columnIndex;
-                          if (_isAscending == true) {
-                            _isAscending = false;
-                            // sort the product list in Ascending, order by Price
-                            tableDetail.sort((productA, productB) =>
-                                productB[cName].compareTo(productA[cName]));
-                          } else {
-                            _isAscending = true;
-                            // sort the product list in Descending, order by Price
-                            tableDetail.sort((productA, productB) =>
-                                productA[cName].compareTo(productB[cName]));
-                          }
-                        });
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Form(
+                      key: _formKey,
+                      child: Expanded(
+                        child: TextFormField(
+                          controller: _searchController,
+                          validator: (value) {
+                          },
+                          onChanged: (value){
+                            print(value);
 
-
-                      },
-                      label: InkWell(
-                        onLongPress: ()async{
-                          print("on long press is pressed");
-                          final value = await showDialog(
-                            context: context,
-                            builder: (context) =>VisibilityPage(columnName: Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString(),columnIndex: index,),
-                          );
-
-                          // execution of this code continues when the dialog was closed (popped)
-
-                          // note that the result can also be null, so check it
-                          // (back button or pressed outside of the dialog)
-                          if (value != null && value.runtimeType==int) {
-                            Directory appDocDir = await getApplicationDocumentsDirectory();
-                            String databasePath = join(appDocDir.path, 'asset_EasySoftDataFile.db');
-                            var db = await openDatabase(databasePath);
-                            if(value==1){
-                              Map<String,dynamic> map={"layout":"dataTable",
-                                "column_name":Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString(),
-                                "visibility":"0"
-                              };
-                              print(await db.insert('Setting', map));
-                              Provider.of<DatabaseProvider>(context,listen: false).removeColumn(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString()).then((value) {
+                          },),
+                      ),
+                    ),
+                    PopupMenuButton<int>(
+                        onSelected: (item)=>onSelected(context,item),
+                        itemBuilder: (context)=>[
+                          PopupMenuItem<int>(
+                              value: 0,
+                              child: Text('Print')),
+                          PopupMenuItem<int>(
+                              value: 1,
+                              child: Text('Grid Layout')),
+                          PopupMenuItem<int>(
+                              value: 2,
+                              child: Text('Slider')),
+                          PopupMenuItem<int>(
+                              value: 3,
+                              child: Text('ColorPicker')),
+                        ]
+                    ),          
+                  ],
+                ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: DataTable(
+                        // showBottomBorder: true,
+                        // dividerThickness: 5.0,
+                        decoration:UnderlineTabIndicator(borderSide: BorderSide(color: Colors.black, style: BorderStyle.solid)) ,
+                        showCheckboxColumn:false,
+                        sortColumnIndex: _currentSortColumn,
+                        sortAscending: _isAscending,
+                        columns: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName.length, (index) {
+                          return DataColumn(
+                              onSort: (columnIndex,sortAscending){
+                                print(sortAscending);
                                 setState(() {
-
+                                  String cName=Provider.of<DatabaseProvider>(context,listen:false).tableColumnName[columnIndex];
+                                  _currentSortColumn = columnIndex;
+                                  if (_isAscending == true) {
+                                    _isAscending = false;
+                                    // sort the product list in Ascending, order by Price
+                                    tableDetail.sort((productA, productB) =>
+                                        productB[cName].compareTo(productA[cName]));
+                                  } else {
+                                    _isAscending = true;
+                                    // sort the product list in Descending, order by Price
+                                    tableDetail.sort((productA, productB) =>
+                                        productA[cName].compareTo(productB[cName]));
+                                  }
                                 });
-                              });
+
+
+                              },
+                              label: InkWell(
+                                onLongPress: ()async{
+                                  print("on long press is pressed");
+                                  final value = await showDialog(
+                                    context: context,
+                                    builder: (context) =>VisibilityPage(columnName: Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString(),columnIndex: index,),
+                                  );
+
+                                  // execution of this code continues when the dialog was closed (popped)
+
+                                  // note that the result can also be null, so check it
+                                  // (back button or pressed outside of the dialog)
+                                  if (value != null && value.runtimeType==int) {
+                                    Directory appDocDir = await getApplicationDocumentsDirectory();
+                                    String databasePath = join(appDocDir.path, 'asset_EasySoftDataFile.db');
+                                    var db = await openDatabase(databasePath);
+                                    if(value==1){
+                                      Map<String,dynamic> map={"layout":"dataTable",
+                                        "column_name":Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString(),
+                                        "visibility":"0"
+                                      };
+                                      print(await db.insert('Setting', map));
+                                      Provider.of<DatabaseProvider>(context,listen: false).removeColumn(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString()).then((value) {
+                                        setState(() {
+
+                                        });
+                                      });
 
 
 
-                            }else if(value==2){
-                              Provider.of<DatabaseProvider>(context,listen: false).groupBy(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString());
-                              Navigator.pushNamed(context, '/group_by_page',arguments: Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString());
+                                    }else if(value==2){
+                                      Provider.of<DatabaseProvider>(context,listen: false).groupBy(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString());
+                                      Navigator.pushNamed(context, '/group_by_page',arguments: Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString());
 
-                            }else if(value==3){
-                              sum= Provider.of<DatabaseProvider>(context,listen: false).getSumOfColumn(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index],index);
-                              setState(() {
-                                showCount=false;
-                                showSum=true;
-                                showMin=false;
-                                showMax=false;
-                                sumColumnIndex=index;
-                                print(index);
-                              });
-                              }else if(value==4){
-                              //4 for min
-                              min=Provider.of<DatabaseProvider>(context,listen:false).getMinValue(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index]);
-                              //print(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index]);
-                              setState(() {
-                                showCount=false;
-                                showMin=true;
-                                showSum=false;
-                                showMax=false;
-                                sumColumnIndex=index;
-                              });
+                                    }else if(value==3){
+                                      sum= Provider.of<DatabaseProvider>(context,listen: false).getSumOfColumn(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName[index],index);
+                                      setState(() {
+                                        showCount=false;
+                                        showSum=true;
+                                        showMin=false;
+                                        showMax=false;
+                                        sumColumnIndex=index;
+                                        print(index);
+                                      });
+                                    }else if(value==4){
+                                      //4 for min
+                                      min=Provider.of<DatabaseProvider>(context,listen:false).getMinValue(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName[index]);
+                                      //print(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index]);
+                                      setState(() {
+                                        showCount=false;
+                                        showMin=true;
+                                        showSum=false;
+                                        showMax=false;
+                                        sumColumnIndex=index;
+                                      });
 
-                            }else if(value==5){
-                              max=Provider.of<DatabaseProvider>(context,listen:false).getMaxValue(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index]);
-                              setState(() {
-                                showCount=false;
-                                showMin=false;
-                                showSum=false;
-                                showMax=true;
-                                sumColumnIndex=index;
-                              });
-                            }else if(value==6){
-                              count=Provider.of<DatabaseProvider>(context,listen:false).getColumnCount(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index]);
-                              setState(() {
-                                showCount=true;
-                                showMin=false;
-                                showSum=false;
-                                showMax=false;
-                                sumColumnIndex=index;
-                              });
-                            }else if(value==7){
-                              Provider.of<DatabaseProvider>(context,listen:false).runningSum(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName[index]);
-                            setState(() {
-                              tableDetail=List.generate(Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableDetailList!.length, (index) {
-                                Map map=Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen: false).tableDetailList![index];
-                                return map;
-                              }
-                              );
+                                    }else if(value==5){
+                                      max=Provider.of<DatabaseProvider>(context,listen:false).getMaxValue(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName[index]);
+                                      setState(() {
+                                        showCount=false;
+                                        showMin=false;
+                                        showSum=false;
+                                        showMax=true;
+                                        sumColumnIndex=index;
+                                      });
+                                    }else if(value==6){
+                                      count=Provider.of<DatabaseProvider>(context,listen:false).getColumnCount(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index]);
+                                      setState(() {
+                                        showCount=true;
+                                        showMin=false;
+                                        showSum=false;
+                                        showMax=false;
+                                        sumColumnIndex=index;
+                                      });
+                                    }else if(value==7){
+                                      Provider.of<DatabaseProvider>(context,listen:false).runningSum(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName[index]);
+                                      setState(() {
+                                        tableDetail=List.generate(Provider.of<DatabaseProvider>(Values.navigatorKey.currentContext as BuildContext,listen:false).tableDetailList!.length, (index) {
+                                          Map map=Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen: false).tableDetailList![index];
+                                          return map;
+                                        }
+                                        );
 
-                            });
-                            }
+                                      });
+                                    }
 
-                          }
-                          else if (value != null  && value.runtimeType.toString()=="List<dynamic>"){
-                            Provider.of<DatabaseProvider>(context,listen:false).getSearchTable(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString(), index,value);
-                          setState(() {
-                            tableDetail=List.generate(Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableDetailList!.length, (index) {
-                              Map map=Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen: false).tableDetailList![index];
-                              return map;
-                            }
-                            );
+                                  }
+                                  else if (value != null  && value.runtimeType.toString()=="List<dynamic>"){
+                                    Provider.of<DatabaseProvider>(context,listen:false).getSearchTable(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString(), index,value);
+                                    setState(() {
+                                      tableDetail=List.generate(Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableDetailList!.length, (index) {
+                                        Map map=Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen: false).tableDetailList![index];
+                                        return map;
+                                      }
+                                      );
 
-                          });
-                          }
-                        },
-                        child: Text(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString()),
-                      ));
-                }), rows:
-                getTableRows(),
-                )),
+                                    });
+                                  }
+                                },
+                                child: Text(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString()),
+                              ));
+                        }), rows:
+                      getTableRows(),
+                      )),
+                )
+              ],
+            ),
           ):GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: column.round()),
               itemCount: Provider.of<DatabaseProvider>(context,listen: false).tableDetailList!.length,
@@ -305,11 +330,28 @@ class _TableDetailPage extends State<TableDetailPage> {
   tableRowList.clear();
   for(int i=0;i<Provider.of<DatabaseProvider>(context,listen:false).tableDetailList.length;i++){
     var tableDetailRow=tableDetail[i];
-    tableRowList.add(DataRow(
-        selected: true,
-        cells: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName.length, (index) {
-          return DataCell(Text(tableDetailRow[Provider.of<DatabaseProvider>(context,listen:false).tableColumnName[index]].toString()));
-        })));
+    if(selectedIndex==i){
+      tableRowList.add(DataRow(
+          selected: true,
+          color: MaterialStateColor.resolveWith((states) => backgroundColr),
+          onSelectChanged: (bool? selected,){
+            selectedIndex=i;
+          },
+          cells: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName.length, (index) {
+            return DataCell(Text(tableDetailRow[Provider.of<DatabaseProvider>(context,listen:false).tableColumnName[index]].toString()));
+          })));
+    }else{
+      tableRowList.add(DataRow(
+          onSelectChanged: (bool? selected,){
+            setState(() {
+              selectedIndex=i;
+            });
+          },
+          cells: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName.length, (index) {
+            return DataCell(Text(tableDetailRow[Provider.of<DatabaseProvider>(context,listen:false).tableColumnName[index]].toString()));
+          })));
+    }
+
   }
   if(showSum){
 

@@ -30,6 +30,9 @@ class _HomePageState extends State<HomePage> {
     });
 
           }, child: Text("Project Menu Page")),
+          ElevatedButton(onPressed:(){
+            Navigator.pushNamed(context, '/download_image_folder_page');
+          }, child: Text("Download image folder")),
 
         ],
       ),

@@ -23,89 +23,109 @@ class _VisibilityPage extends State<VisibilityPage> {
   @override
   Widget build(BuildContext context) {
     ScreenConfig().init(context);
-    return AlertDialog(
-      title: Text(widget.columnName),
-      content: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(child: Form(
-            key: _formKey,
-            child: TextFormField(
-              controller: _searchController,
-              validator: (value) {
-              },
-              onChanged: (value){
-                searchList=Provider.of<DatabaseProvider>(context,listen: false).getSearchList(value, widget.columnName);
-                if(value.length==0){
-                  print("value is zero");
-                }
-                setState(() {
+    return SingleChildScrollView(
+      child: AlertDialog(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20.0))
+        ),
+        title: Text(widget.columnName),
+        content: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(child: Form(
+              key: _formKey,
+              child: TextFormField(
+                controller: _searchController,
+                validator: (value) {
+                },
+                onChanged: (value){
+                  searchList=Provider.of<DatabaseProvider>(context,listen: false).getSearchList(value, widget.columnName);
+                  if(value.length==0){
+                    print("value is zero");
+                  }
+                  setState(() {
 
-                });
-              },),
-          )),
-              IconButton(onPressed: (){
-                Navigator.pop(context, searchList);
-              }, icon: Icon(Icons.search))
-            ],),
-          Expanded(
-            child: SizedBox(
+                  });
+                },),
+            )),
+                IconButton(onPressed: (){
+                  Navigator.pop(context, searchList);
+                }, icon: Icon(Icons.search))
+              ],),
+            SizedBox(
               width: ScreenConfig.screenWidth,
-              height: ScreenConfig.blockHeight*30,
+              height: ScreenConfig.blockHeight*(searchList.length*3),
               child: ListView.builder(
                   itemCount: searchList.length,
                   itemBuilder: (context,index){
                 return Text(searchList[index].toString());
               }),
             ),
-          ),
-          ElevatedButton(onPressed: (){
-            Navigator.pop(context, 2);
-          }, child: Text('GROUPBY')),
-          ElevatedButton(onPressed: (){
-            Navigator.pop(context, 1);
-          }, child: Text('HIDE')),
-          ElevatedButton(onPressed: (){
-            Navigator.pop(context, 7);
-          }, child: Text('Running Average')),
-    DropdownButton<String>(
-    value: dropdownValue,
-    icon: const Icon(Icons.arrow_downward),
-    iconSize: 24,
-    elevation: 16,
-    style: const TextStyle(color: Colors.deepPurple),
-    underline: Container(
-    height: 2,
-    color: Colors.deepPurpleAccent,
-    ),
-    onChanged: (String? newValue) {
-    setState(() {
-    dropdownValue = newValue!;
-    });
-    },
-    items: <String>['SUM','MIN','MAX','COUNT']
-        .map<DropdownMenuItem<String>>((String value) {
-    return DropdownMenuItem<String>(
-    value: value,
-    child: Text(value),
-    );
-    }).toList(),
-    ),
-
-          ElevatedButton(onPressed: (){
-            if(dropdownValue=='SUM'){
-              print("list lendth "+searchList.length.toString());
-              Navigator.pop(context, 3);
-            }else if(dropdownValue=='MIN'){
-              Navigator.pop(context, 4);
-            }else if(dropdownValue=='MAX'){
-              Navigator.pop(context, 5);
-            }else if(dropdownValue=='COUNT'){
-              Navigator.pop(context, 6);
-            }
-          }, child: Text("OK")),
-        ],
+            ElevatedButton(onPressed: (){
+              Navigator.pop(context, 2);
+            }, child: Text('GROUPBY')),
+            ElevatedButton(onPressed: (){
+              Navigator.pop(context, 1);
+            }, child: Text('HIDE')),
+            ElevatedButton(onPressed: (){
+              Navigator.pop(context, 7);
+            }, child: Text('Running Average')),
+      DropdownButton<String>(
+      value: dropdownValue,
+      icon: const Icon(Icons.arrow_downward),
+      iconSize: 24,
+      elevation: 16,
+      style: const TextStyle(color: Colors.deepPurple),
+      underline: Container(
+      height: 2,
+      color: Colors.deepPurpleAccent,
+      ),
+      onChanged: (String? newValue) {
+      setState(() {
+      dropdownValue = newValue!;
+      });
+      },
+      items: <String>['SUM','MIN','MAX','COUNT']
+          .map<DropdownMenuItem<String>>((String value) {
+      return DropdownMenuItem<String>(
+      value: value,
+      child: Text(value),
+      );
+      }).toList(),
+      ),
+            InkWell(
+              child: Expanded(
+                child: Container(
+                  width: ScreenConfig.screenWidth,
+                  padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(32.0),
+                        bottomRight: Radius.circular(32.0)),
+                  ),
+                  child: Text(
+                    "OK",
+                    style: TextStyle(color: Colors.white),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+              onTap: (){
+                if(dropdownValue=='SUM'){
+                  Navigator.pop(context, 3);
+                }else if(dropdownValue=='MIN'){
+                  Navigator.pop(context, 4);
+                }else if(dropdownValue=='MAX'){
+                  Navigator.pop(context, 5);
+                }else if(dropdownValue=='COUNT'){
+                  Navigator.pop(context, 6);
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

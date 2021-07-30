@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sqllite_table_view/pages/column_slider.dart';
+import 'package:flutter_sqllite_table_view/pages/download_image_folder.dart';
 import 'package:flutter_sqllite_table_view/pages/group_by_page.dart';
 import 'package:flutter_sqllite_table_view/pages/home_page.dart';
 import 'package:flutter_sqllite_table_view/pages/project_menu_page.dart';
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
         '/project_menu_page':(context)=>ProjectMenuPage(),
         '/column_slider':(context)=>ColumnSlider(totalColumns: 2,),
         '/group_by_page':(context)=>GroupByPage(),
+        '/download_image_folder_page':(context)=>DownloadImageFolderPage(),
       },
 
 

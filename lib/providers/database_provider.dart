@@ -181,19 +181,20 @@ class DatabaseProvider extends ChangeNotifier{
       List cList = [];
       List tableRunningDetailList=[];
       for (int i = 0; i < tableDetailList.length; i++) {
-        cList.add(tableDetailList[i][columName]);
+        cList.add(tableDetailList[i][columName].toString());
       }
-      if(cList[0].runtimeType==int){
+      if(int.tryParse(cList[0])!=null){
         int sum=0;
         tableRunningDetailList.clear();
         Map map=Map.from(tableDetailList[0]);
-        map["Running Average"]=tableDetailList[0][columName];
-        sum=tableDetailList[0][columName];
+        map["Running Average"]=int.parse(cList[0]);
+        sum=int.parse(cList[0]);
         tableRunningDetailList.add(map);
+        print(tableRunningDetailList);
         tableColumnName.add("Running Average");
         for(int j=1;j<tableDetailList.length;j++){
           Map map=Map.from(tableDetailList[j]);
-          map["Running Average"]=sum+tableDetailList[j][columName];
+          map["Running Average"]=sum+int.parse(cList[j]);
           sum=map["Running Average"];
           tableRunningDetailList.add(map);
         }
