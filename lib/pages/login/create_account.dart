@@ -4,8 +4,8 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:image_picker/image_picker.dart';
 
+import 'package:image_picker/image_picker.dart';
 class CreateAccount extends StatefulWidget {
   @override
   _CreateAccountState createState() => _CreateAccountState();

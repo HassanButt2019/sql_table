@@ -2,7 +2,6 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
-
 class GmailLogin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

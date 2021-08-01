@@ -44,16 +44,20 @@ class _DownloadImageFolderPageState extends State<DownloadImageFolderPage> {
   }
 
   void initDir()async {
+    print("initDir");
     if(dir==null){
       dir=(await getApplicationDocumentsDirectory()).path;
     }
   }
   Future<File> _downloadFile(String url,String fileName)async{
+      print('download file');
       var req=await http.Client().get(Uri.parse(url));
+      print(req);
       var file=File('$dir/$fileName');
       return file.writeAsBytes(req.bodyBytes);
   }
   Future<void> _downloadZip()async{
+    print('download zip');
     setState(()  {
       _downloading=true;
     });
@@ -74,8 +78,8 @@ class _DownloadImageFolderPageState extends State<DownloadImageFolderPage> {
         child: CircularProgressIndicator(strokeWidth: 3.0,valueColor: AlwaysStoppedAnimation<Color>(Colors.white),),
     );
   }
-  unarchiveAndSaveFile(File zippedFile) async{
-
+  unarchiveAndSaveFile(var zippedFile) async{
+    print('unarchivedandSaved');
     var bytes=zippedFile.readAsBytesSync();
     var archive=ZipDecoder().decodeBytes(bytes);
     for(var file in archive){

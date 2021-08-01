@@ -1,14 +1,17 @@
+import 'package:connectivity_wall/connectivity_wall.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sqllite_table_view/pages/column_slider.dart';
 import 'package:flutter_sqllite_table_view/pages/download_image_folder.dart';
 import 'package:flutter_sqllite_table_view/pages/group_by_page.dart';
 import 'package:flutter_sqllite_table_view/pages/home_page.dart';
+import 'package:flutter_sqllite_table_view/pages/login/create_account.dart';
 import 'package:flutter_sqllite_table_view/pages/project_menu_page.dart';
 import 'package:flutter_sqllite_table_view/pages/table_view_page.dart';
 import 'package:flutter_sqllite_table_view/pages/pdf_preview_page.dart';
-import 'package:flutter_sqllite_table_view/pages/table_detail_page.dart';
-import 'package:flutter_sqllite_table_view/providers/database_provider.dart';
+import 'package:flutter_sqllite_table_view/pages/sqlite_data_views/table_detail_page.dart';
+import 'package:flutter_sqllite_table_view/providers/splash_data_provider.dart';
+import 'package:flutter_sqllite_table_view/providers/sqlite_database_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'config/values.dart';
@@ -19,22 +22,86 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Provider.of<DatabaseProvider>(context,listen: false).init();
-    return MaterialApp(
-      title: 'Sqlite Db',
-      navigatorKey: Values.navigatorKey,
-      initialRoute: '/',
-      home: HomePage(),
-      routes: {
-        '/table_view_page':(context)=>TableViewPage(),
-        '/table_detail_page':(context)=>TableDetailPage(),
-        '/pdf_preview_page':(context)=>PdfPreviewPage(),
-        '/project_menu_page':(context)=>ProjectMenuPage(),
-        '/column_slider':(context)=>ColumnSlider(totalColumns: 2,),
-        '/group_by_page':(context)=>GroupByPage(),
-        '/download_image_folder_page':(context)=>DownloadImageFolderPage(),
+    // Provider.of<SplashDataProvider>(context,listen: false).downloadImageFile().then((value) {
+    //   Navigator.pushNamed(context, '/home_page');
+    // });
+    return FutureBuilder(
+      // Replace the 3 second delay with your initialization code:
+      //future: Future.delayed(Duration(seconds: 5)),
+      future: Provider.of<SplashDataProvider>(context,listen: false).getProjectMenu(),
+      builder: (context, AsyncSnapshot snapshot) {
+        // Show splash screen while waiting for app resources to load:
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return MaterialApp(
+
+              navigatorKey: Values.navigatorKey,
+              home: Splash());
+        } else {
+          // Loading is done, return the app:
+
+          return MaterialApp(
+            title: 'Sqlite Db',
+            navigatorKey: Values.navigatorKey,
+            initialRoute: '/',
+            home:  HomePage(),
+            routes: {
+              '/table_view_page':(context)=>TableViewPage(),
+              '/table_detail_page':(context)=>TableDetailPage(),
+              '/pdf_preview_page':(context)=>PdfPreviewPage(),
+              '/project_menu_page':(context)=>ProjectMenuPage(),
+              '/column_slider':(context)=>ColumnSlider(totalColumns: 2,),
+              '/group_by_page':(context)=>GroupByPage(),
+              '/download_image_folder_page':(context)=>DownloadImageFolderPage(),
+              '/home_page':(context)=>HomePage(),
+            },
+
+
+          );
+        }
       },
+    );
+  }
+  }
+class Splash extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+}
+class OfflineState extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        alignment: Alignment.center,
+        child: Center(
+          child: Text("Not connected to internet"),
+        ),
+      ),
+    );
+  }
+}
+class Online extends StatefulWidget{
+  @override
+  State<StatefulWidget> createState() {
+    return OnlineState();
+  }
 
+}
 
+class OnlineState extends State<Online> {
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Scaffold(
+      body:Center(
+        child: CircularProgressIndicator(),
+      )
     );
   }
 }

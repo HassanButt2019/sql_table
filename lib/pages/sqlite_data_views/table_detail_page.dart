@@ -6,12 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sqllite_table_view/config/screen_config.dart';
 import 'package:flutter_sqllite_table_view/config/values.dart';
 import 'package:flutter_sqllite_table_view/pages/visibility_page.dart';
-import 'package:flutter_sqllite_table_view/providers/database_provider.dart';
+import 'package:flutter_sqllite_table_view/providers/sqlite_database_provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'column_slider.dart';
+import '../column_slider.dart';
 import 'package:path/path.dart' show join;
 class TableDetailPage extends StatefulWidget{
   @override

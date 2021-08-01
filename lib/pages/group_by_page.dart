@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sqllite_table_view/config/screen_config.dart';
 import 'package:flutter_sqllite_table_view/config/values.dart';
-import 'package:flutter_sqllite_table_view/providers/database_provider.dart';
+import 'package:flutter_sqllite_table_view/providers/sqlite_database_provider.dart';
 import 'package:provider/provider.dart';
 
 class GroupByPage extends StatefulWidget {

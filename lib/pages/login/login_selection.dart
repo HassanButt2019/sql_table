@@ -1,8 +1,9 @@
 import 'package:country_code_picker/country_code_picker.dart';
-import 'package:easysoft/view/login/gmaillogin.dart';
-import 'package:easysoft/view/login/numberlogin.dart';
-import 'package:easysoft/view/login/passwordlogin.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sqllite_table_view/pages/login/passwordlogin.dart';
+
+import 'gmaillogin.dart';
+import 'numberlogin.dart';
 
 class LoginSelection extends StatelessWidget {
   @override
