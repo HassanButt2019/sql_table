@@ -51,7 +51,12 @@ class SplashDataProvider extends ChangeNotifier {
       dir = (await getApplicationDocumentsDirectory()).path;
     }
   }
-
+  Future<void> callSplashApis()async{
+    await getProject();
+    await getProjectMenuSub();
+    await getCountryCode();
+    await getProjectMenu();
+  }
   Future<File> _downloadFile(String url, String fileName) async {
     var req;
     try {
@@ -68,13 +73,11 @@ class SplashDataProvider extends ChangeNotifier {
     Uri url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.projectMenu}');
     try {
       final response = await http.get(url);
-      print(response.statusCode);
       if (response.statusCode == 200) {
         deleteTable(tableName);
         Map map = json.decode(response.body);
         List<Map<String, Object?>> list = List.from(map[tableName]);
         for (int i = 0; i < list.length; i++) {
-          print('for loop in');
           Map<String,dynamic> map = Map.from(list[i]);
           insertTable(tableName, map);
         }
@@ -85,7 +88,66 @@ class SplashDataProvider extends ChangeNotifier {
         print(e.toString());
     }
   }
-
+  Future<void> getCountryCode() async {
+    String tableName = "CountryCode";
+    Uri url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.countryCode}');
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        deleteTable(tableName);
+        Map map = json.decode(response.body);
+        List<Map<String, Object?>> list = List.from(map[tableName]);
+        for (int i = 0; i < list.length; i++) {
+          Map<String,dynamic> map = Map.from(list[i]);
+          insertTable(tableName, map);
+        }
+      } else {
+        print("some error occur while calling apis");
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+    }
+  }
+  Future<void> getProjectMenuSub() async {
+    String tableName = "ProjectMenuSub";
+    Uri url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.projectMenuSub}');
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        deleteTable(tableName);
+        Map map = json.decode(response.body);
+        List<Map<String, Object?>> list = List.from(map[tableName]);
+        for (int i = 0; i < list.length; i++) {
+          Map<String,dynamic> map = Map.from(list[i]);
+          insertTable(tableName, map);
+        }
+      } else {
+        print("some error occur while calling apis");
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+    }
+  }
+  Future<void> getProject() async {
+    String tableName = "Project";
+    Uri url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.project}');
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        deleteTable(tableName);
+        Map map = json.decode(response.body);
+        List<Map<String, Object?>> list = List.from(map['ProjectMenu']);
+        for (int i = 0; i < list.length; i++) {
+          Map<String,dynamic> map = Map.from(list[i]);
+          insertTable(tableName, map);
+        }
+      } else {
+        print("some error occur while calling apis");
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+    }
+  }
   Future<void> deleteTable(String tableName) async {
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String databasePath = join(appDocDir.path, 'asset_EasySoftDataFile.db');
@@ -93,7 +155,7 @@ class SplashDataProvider extends ChangeNotifier {
     // String query = '''
     //   DELETE from $tableName;
     //   ''';
-    print(await db.delete(tableName));
+    await db.delete(tableName);
   }
   Future<void> insertTable(String tableName,Map<String,dynamic> values) async {
     Directory appDocDir = await getApplicationDocumentsDirectory();
@@ -102,6 +164,6 @@ class SplashDataProvider extends ChangeNotifier {
     // String query = '''
     //   DELETE from $tableName;
     //   ''';
-    print(await db.insert(tableName, values));
+    await db.insert(tableName, values);
   } 
 }

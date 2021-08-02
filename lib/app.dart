@@ -4,16 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sqllite_table_view/pages/column_slider.dart';
 import 'package:flutter_sqllite_table_view/pages/download_image_folder.dart';
 import 'package:flutter_sqllite_table_view/pages/group_by_page.dart';
+import 'package:flutter_sqllite_table_view/pages/home/hompe_page.dart';
+import 'package:flutter_sqllite_table_view/pages/home/project_menu_dashboard_page.dart';
 import 'package:flutter_sqllite_table_view/pages/home_page.dart';
 import 'package:flutter_sqllite_table_view/pages/login/create_account.dart';
-import 'package:flutter_sqllite_table_view/pages/project_menu_page.dart';
 import 'package:flutter_sqllite_table_view/pages/table_view_page.dart';
 import 'package:flutter_sqllite_table_view/pages/pdf_preview_page.dart';
 import 'package:flutter_sqllite_table_view/pages/sqlite_data_views/table_detail_page.dart';
 import 'package:flutter_sqllite_table_view/providers/splash_data_provider.dart';
 import 'package:flutter_sqllite_table_view/providers/sqlite_database_provider.dart';
 import 'package:provider/provider.dart';
-
+import 'package:flutter_sqllite_table_view/pages/dashbord_page.dart';
 import 'config/values.dart';
 
 class MyApp extends StatelessWidget {
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
     return FutureBuilder(
       // Replace the 3 second delay with your initialization code:
       //future: Future.delayed(Duration(seconds: 5)),
-      future: Provider.of<SplashDataProvider>(context,listen: false).getProjectMenu(),
+      future: Provider.of<SplashDataProvider>(context,listen: false).callSplashApis(),
       builder: (context, AsyncSnapshot snapshot) {
         // Show splash screen while waiting for app resources to load:
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -48,11 +49,13 @@ class MyApp extends StatelessWidget {
               '/table_view_page':(context)=>TableViewPage(),
               '/table_detail_page':(context)=>TableDetailPage(),
               '/pdf_preview_page':(context)=>PdfPreviewPage(),
-              '/project_menu_page':(context)=>ProjectMenuPage(),
               '/column_slider':(context)=>ColumnSlider(totalColumns: 2,),
               '/group_by_page':(context)=>GroupByPage(),
               '/download_image_folder_page':(context)=>DownloadImageFolderPage(),
-              '/home_page':(context)=>HomePage(),
+              //'/home_page':(context)=>HomePage(),
+              //'/dashboard_home_page':(context)=>DashboardHomePage(),
+              '/dashboard_page':(context)=>DashboardPage(),
+              '/project_menu_dashboard_page':(context)=>ProjectMenuDashboardPage(),
             },
 
 

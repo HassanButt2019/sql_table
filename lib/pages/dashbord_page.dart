@@ -3,8 +3,10 @@ import 'package:flutter_sqllite_table_view/pages/calles/call_page.dart';
 import 'package:flutter_sqllite_table_view/pages/chat/chat_page.dart';
 import 'package:flutter_sqllite_table_view/pages/groups/group_page.dart';
 import 'package:flutter_sqllite_table_view/pages/home/hompe_page.dart';
+import 'package:flutter_sqllite_table_view/providers/dashboard_provider.dart';
+import 'package:provider/provider.dart';
 
-class DashbordPage extends StatelessWidget {
+class DashboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +107,7 @@ class DashbordPage extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            HomePage(),
+            DashboardHomePage(),
             ChatPage(),
             GroupPage(),
             CallPage(),

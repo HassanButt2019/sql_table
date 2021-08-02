@@ -24,15 +24,12 @@ class _HomePageState extends State<HomePage> {
           ElevatedButton(onPressed: (){
             Navigator.pushNamed(context, '/table_view_page');
           }, child: Text("Table View Page")),
-          ElevatedButton(onPressed: (){
-            Provider.of<DatabaseProvider>(context,listen:false).getProjectMenuTable().then((value) {
-              Navigator.pushNamed(context, '/project_menu_page');
-    });
-
-          }, child: Text("Project Menu Page")),
           ElevatedButton(onPressed:(){
             Navigator.pushNamed(context, '/download_image_folder_page');
           }, child: Text("Download image folder")),
+          ElevatedButton(onPressed:(){
+            Navigator.pushNamed(context, '/dashboard_page');
+          }, child: Text("Dashboard")),
 
         ],
       ),
