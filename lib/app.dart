@@ -56,6 +56,7 @@ class MyApp extends StatelessWidget {
               //'/dashboard_home_page':(context)=>DashboardHomePage(),
               '/dashboard_page':(context)=>DashboardPage(),
               '/project_menu_dashboard_page':(context)=>ProjectMenuDashboardPage(),
+              '/create_account_page':(context)=>CreateAccount(),
             },
 
 

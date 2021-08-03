@@ -54,10 +54,28 @@ class _TableDetailPage extends State<TableDetailPage> {
       appBar:AppBar(
         title: Text(args),
         actions: <Widget>[
+          PopupMenuButton<int>(
+              onSelected: (item)=>onSelected(context,item),
+              itemBuilder: (context)=>[
+                PopupMenuItem<int>(
+                    value: 0,
+                    child: Text('Print')),
+                PopupMenuItem<int>(
+                    value: 1,
+                    child: Text('Grid Layout')),
+                PopupMenuItem<int>(
+                    value: 2,
+                    child: Text('Slider')),
+                PopupMenuItem<int>(
+                    value: 3,
+                    child: Text('ColorPicker')),
+              ]
+          ),
         ],
       ),
           body:(layout==0)?SingleChildScrollView(
             child: Column(
+
               children: [
                 Row(
                   children: [
@@ -74,23 +92,7 @@ class _TableDetailPage extends State<TableDetailPage> {
                           },),
                       ),
                     ),
-                    PopupMenuButton<int>(
-                        onSelected: (item)=>onSelected(context,item),
-                        itemBuilder: (context)=>[
-                          PopupMenuItem<int>(
-                              value: 0,
-                              child: Text('Print')),
-                          PopupMenuItem<int>(
-                              value: 1,
-                              child: Text('Grid Layout')),
-                          PopupMenuItem<int>(
-                              value: 2,
-                              child: Text('Slider')),
-                          PopupMenuItem<int>(
-                              value: 3,
-                              child: Text('ColorPicker')),
-                        ]
-                    ),          
+
                   ],
                 ),
                 SingleChildScrollView(

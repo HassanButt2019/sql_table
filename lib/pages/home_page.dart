@@ -30,6 +30,9 @@ class _HomePageState extends State<HomePage> {
           ElevatedButton(onPressed:(){
             Navigator.pushNamed(context, '/dashboard_page');
           }, child: Text("Dashboard")),
+          ElevatedButton(onPressed: (){
+            Navigator.pushNamed(context, '/create_account_page');
+          }, child: Text('Create Account')),
 
         ],
       ),

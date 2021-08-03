@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sqllite_table_view/config/validator.dart';
 import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
@@ -27,7 +28,8 @@ class _CreateAccountState extends State<CreateAccount> {
   final birthController = TextEditingController();
   final numberController = TextEditingController();
   final programController = TextEditingController();
-
+  final _formKey = GlobalKey<FormState>();
+  CountryCode? countryCode;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,119 +87,161 @@ class _CreateAccountState extends State<CreateAccount> {
                   showCountryOnly: true,
                   showOnlyCountryWhenClosed: true,
                   favorite: ['+92', 'PK'],
+                  onChanged: (CountryCode countryCod){
+                    countryCode=countryCod;
+                  },
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
-                  child: Container(
-                    height: 50,
-                    child: TextFormField(
-                      controller: nameController,
-                      decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.supervisor_account),
-                          hintText: "Full Name",
-                          labelText: "Full Name",
-                          filled: true,
-                          fillColor: Colors.white,
-                          focusColor: Colors.green,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: const BorderSide(
-                                color: Colors.white, width: 2.0),
-                          )),
+                Form(child: Column(
+                  key: _formKey,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
+                      child: Container(
+                        height: 50,
+                        child: TextFormField(
+                          controller: nameController,
+                          validator: (value){
+                            if(value!.isEmpty) {
+                              return 'Name cannot be empty';
+                            }
+                          },
+                          decoration: InputDecoration(
+                              prefixIcon: Icon(Icons.supervisor_account),
+                              hintText: "Full Name",
+                              labelText: "Full Name",
+                              filled: true,
+                              fillColor: Colors.white,
+                              focusColor: Colors.green,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                borderSide: const BorderSide(
+                                    color: Colors.white, width: 2.0),
+                              )),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
-                  child: Container(
-                    height: 50,
-                    child: TextFormField(
-                      controller: emailController,
-                      decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.email),
-                          hintText: "Email",
-                          labelText: "Email",
-                          filled: true,
-                          fillColor: Colors.white,
-                          focusColor: Colors.green,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: const BorderSide(
-                                color: Colors.white, width: 2.0),
-                          )),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+                      child: Container(
+                        height: 50,
+                        child: TextFormField(
+                          controller: emailController,
+                          validator: (value){
+                            if(value!.isEmpty) {
+                              return 'Email cannot be empty';
+                            }
+                            else if(!Validator.validateEmail(value)) {
+                              return 'Wrong email';
+                            }
+                          },
+                          decoration: InputDecoration(
+                              prefixIcon: Icon(Icons.email),
+                              hintText: "Email",
+                              labelText: "Email",
+                              filled: true,
+                              fillColor: Colors.white,
+                              focusColor: Colors.green,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                borderSide: const BorderSide(
+                                    color: Colors.white, width: 2.0),
+                              )),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
-                  child: Container(
-                    height: 50,
-                    child: TextField(
-                      controller: passwordController,
-                      decoration: InputDecoration(
-                          suffixIcon: Icon(Icons.visibility),
-                          prefixIcon: Icon(Icons.lock_outline),
-                          labelText: "Password",
-                          hintText: "Password",
-                          filled: true,
-                          fillColor: Colors.white,
-                          focusColor: Colors.green,
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(
-                                  color: Colors.blue,
-                                  width: 20,
-                                  style: BorderStyle.solid))),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+                      child: Container(
+                        height: 50,
+                        child: TextFormField(
+                          controller: passwordController,
+                          validator:  (value) {
+                            if (value!.isEmpty) {
+                              return 'Password cannot be empty';
+                            }
+                            else if (!Validator.validatePassword(value)) {
+                              return 'Password must be at least 6 characters';
+                            }
+                          },
+                          obscureText: true,
+                          decoration: InputDecoration(
+                              suffixIcon: Icon(Icons.visibility),
+                              prefixIcon: Icon(Icons.lock_outline),
+                              labelText: "Password",
+                              hintText: "Password",
+                              filled: true,
+                              fillColor: Colors.white,
+                              focusColor: Colors.green,
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide: BorderSide(
+                                      color: Colors.blue,
+                                      width: 20,
+                                      style: BorderStyle.solid))),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      top: 20, left: 20, right: 20, bottom: 0),
-                  child: Container(
-                    height: 50,
-                    child: TextField(
-                      controller: confPasswordController,
-                      decoration: InputDecoration(
-                          suffixIcon: Icon(Icons.visibility),
-                          prefixIcon: Icon(Icons.lock_outline),
-                          hintText: "Confirm Password",
-                          labelText: "Confirm Password",
-                          filled: true,
-                          fillColor: Colors.white,
-                          focusColor: Colors.green,
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(
-                                  color: Colors.blue,
-                                  width: 20,
-                                  style: BorderStyle.solid))),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: 20, left: 20, right: 20, bottom: 0),
+                      child: Container(
+                        height: 50,
+                        child: TextFormField(
+                          controller: confPasswordController,
+                          validator:  (value) {
+                          if (value != passwordController.text) {
+                            return 'Password does not match';
+                          }
+                            },
+                          obscureText: true,
+                          decoration: InputDecoration(
+                              suffixIcon: Icon(Icons.visibility),
+                              prefixIcon: Icon(Icons.lock_outline),
+                              hintText: "Confirm Password",
+                              labelText: "Confirm Password",
+                              filled: true,
+                              fillColor: Colors.white,
+                              focusColor: Colors.green,
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide: BorderSide(
+                                      color: Colors.blue,
+                                      width: 20,
+                                      style: BorderStyle.solid))),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      top: 20, left: 20, right: 20, bottom: 30),
-                  child: Container(
-                    height: 50,
-                    child: TextField(
-                      controller: numberController,
-                      decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.phone_android),
-                          hintText: "Number",
-                          labelText: "Number",
-                          filled: true,
-                          fillColor: Colors.white,
-                          focusColor: Colors.green,
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(
-                                  color: Colors.blue,
-                                  width: 20,
-                                  style: BorderStyle.solid))),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: 20, left: 20, right: 20, bottom: 30),
+                      child: Container(
+                        height: 50,
+                        child: TextFormField(
+                          controller: numberController,
+                          validator: (value){
+                            if(value!.isEmpty){
+                              return "Phone number cannot be empty";
+
+                            }
+                          },
+                          decoration: InputDecoration(
+                              prefixIcon: Icon(Icons.phone_android),
+                              hintText: "Number",
+                              labelText: "Number",
+                              filled: true,
+                              fillColor: Colors.white,
+                              focusColor: Colors.green,
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide: BorderSide(
+                                      color: Colors.blue,
+                                      width: 20,
+                                      style: BorderStyle.solid))),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
+                  ],
+                )),
                 Container(
                   height: 40,
                   width: MediaQuery.of(context).size.width / 1.5,
@@ -209,7 +253,12 @@ class _CreateAccountState extends State<CreateAccount> {
                             borderRadius: BorderRadius.circular(20),
                           ) // foreground
                           ),
-                      onPressed: () async {},
+                      onPressed: () async {
+                        print(nameController.text);
+                        print(emailController.text);
+                        print(passwordController.text);
+
+                      },
                       child: Text("Sign Up")),
                 ),
                 SizedBox(
