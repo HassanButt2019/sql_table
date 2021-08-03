@@ -4,9 +4,11 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sqllite_table_view/config/validator.dart';
+import 'package:flutter_sqllite_table_view/providers/auth_provider.dart';
 import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 class CreateAccount extends StatefulWidget {
   @override
   _CreateAccountState createState() => _CreateAccountState();
@@ -20,18 +22,19 @@ class _CreateAccountState extends State<CreateAccount> {
   String fileName = "";
   File? _image = null;
   final picker = ImagePicker();
-  final nameController = TextEditingController();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confPasswordController = TextEditingController();
-  final addressController = TextEditingController();
-  final birthController = TextEditingController();
-  final numberController = TextEditingController();
-  final programController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confPasswordController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController birthController = TextEditingController();
+  TextEditingController numberController = TextEditingController();
+  TextEditingController programController = TextEditingController();
+  final _formKey= GlobalKey<FormState>();
   CountryCode? countryCode;
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: Stack(
         children: [
@@ -91,8 +94,10 @@ class _CreateAccountState extends State<CreateAccount> {
                     countryCode=countryCod;
                   },
                 ),
-                Form(child: Column(
-                  key: _formKey,
+                Form(
+                    key: _formKey,
+                    child: Column(
+
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
@@ -240,27 +245,33 @@ class _CreateAccountState extends State<CreateAccount> {
                         ),
                       ),
                     ),
+                    Container(
+                      height: 40,
+                      width: MediaQuery.of(context).size.width / 1.5,
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              primary: Colors.black, // background
+                              onPrimary: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ) // foreground
+                          ),
+                          onPressed: () async {
+                            print(nameController.text);
+                            print(emailController.text);
+                            print(passwordController.text);
+                            if(_formKey.currentState!.validate()){
+                              Provider.of<AuthProvider>(context,listen:false).createAccount(nameController.text, passwordController.text, emailController.text,numberController.text);
+                            }else{
+                              print('form is not valid');
+                            }
+
+                          },
+                          child: Text("Sign Up")),
+                    ),
                   ],
                 )),
-                Container(
-                  height: 40,
-                  width: MediaQuery.of(context).size.width / 1.5,
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          primary: Colors.black, // background
-                          onPrimary: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ) // foreground
-                          ),
-                      onPressed: () async {
-                        print(nameController.text);
-                        print(emailController.text);
-                        print(passwordController.text);
 
-                      },
-                      child: Text("Sign Up")),
-                ),
                 SizedBox(
                   height: 20,
                 )
