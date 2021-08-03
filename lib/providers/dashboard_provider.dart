@@ -17,6 +17,7 @@ class DashboardProvider extends ChangeNotifier{
       SELECT * FROM Project;
       ''';
     List list=await db.rawQuery(query);
+    print(list);
     projectTableDetailList.clear();
     List listCopy=List.from(list);
     for(int i=0;i<listCopy.length;i++){

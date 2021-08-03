@@ -52,9 +52,9 @@ class DashboardPage extends StatelessWidget {
                 title: Text("Chat"),
               ),
               ListTile(
-                leading: Icon(Icons.call),
-                title: Text("Calls"),
-                onTap: () {}
+                  leading: Icon(Icons.call),
+                  title: Text("Calls"),
+                  onTap: () {}
               ),
               ListTile(
                 leading: Icon(Icons.logout),
@@ -107,7 +107,7 @@ class DashboardPage extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            DashboardHomePage(),
+            DashboardHomePage(itemcount: 2,),
             ChatPage(),
             GroupPage(),
             CallPage(),

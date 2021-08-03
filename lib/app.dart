@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
               '/download_image_folder_page':(context)=>DownloadImageFolderPage(),
               //'/home_page':(context)=>HomePage(),
               //'/dashboard_home_page':(context)=>DashboardHomePage(),
-              '/dashboard_page':(context)=>DashboardPage(),
+              '/dashboard_page':(context)=>DashboardHomePage(itemcount:2),
               '/project_menu_dashboard_page':(context)=>ProjectMenuDashboardPage(),
               '/create_account_page':(context)=>CreateAccount(),
             },

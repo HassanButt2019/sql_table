@@ -60,8 +60,6 @@ class TableViewPage extends StatelessWidget {
                         Provider.of<DatabaseProvider>(context,listen: false).getTable((snapshot.data! as List)[index]['name']).then((value) {
                           Navigator.pushNamed(context, '/table_detail_page',arguments: (snapshot.data! as List)[index]['name']);
                         });
-
-
                       },
                     );
 
