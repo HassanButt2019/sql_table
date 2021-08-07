@@ -33,6 +33,23 @@ class _HomePageState extends State<HomePage> {
           ElevatedButton(onPressed: (){
             Navigator.pushNamed(context, '/create_account_page');
           }, child: Text('Create Account')),
+          ElevatedButton(onPressed: (){
+            Navigator.pushNamed(context, '/account_to_group');
+          }, child: Text('Account 2 Group')),
+           ElevatedButton(onPressed: (){
+            Navigator.pushNamed(context, '/account_3_name');
+          }, child: Text('Account 3 Group')),
+           ElevatedButton(onPressed: (){
+            Navigator.pushNamed(context, '/item_2_group');
+          }, child: Text('Item 2 Group')),
+           ElevatedButton(onPressed: (){
+            Navigator.pushNamed(context, '/item_3_name');
+          }, child: Text('Item 3 Name')),
+          ElevatedButton(onPressed: (){
+            Navigator.pushNamed(context, '/cash_book');
+          }, child: Text('Cash Book')),
+
+          
 
         ],
       ),

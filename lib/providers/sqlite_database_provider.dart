@@ -1,8 +1,16 @@
 
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sqllite_table_view/menu_tile_model.dart';
+import 'package:flutter_sqllite_table_view/models/account2group.dart';
+import 'package:flutter_sqllite_table_view/models/account3name.dart';
+import 'package:flutter_sqllite_table_view/models/accountType.dart';
+import 'package:flutter_sqllite_table_view/models/cashbook.dart';
+import 'package:flutter_sqllite_table_view/models/item2group.dart';
+import 'package:flutter_sqllite_table_view/models/item3name.dart';
+import 'package:flutter_sqllite_table_view/pages/GeneraltTrading/Account2Group.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -55,6 +63,22 @@ class DatabaseProvider extends ChangeNotifier{
    groupSetList.sort();
     print(groupSetList);
     }
+
+  Future<List<AccountType>> fetchAccountTypes() async{
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String databasePath = join(appDocDir.path, 'asset_EasySoftDataFile.db');
+    var db = await openDatabase(databasePath);
+
+    List<Map> types = await db.query('Account1Type');
+   // print(types);
+    return types.length == 0 ? [] : types.map((e) => AccountType.fromMap(e)).toList();
+  }
+
+  
+
+
+
+
   Future<void> getTable(String tableName)async{
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String databasePath = join(appDocDir.path, 'asset_EasySoftDataFile.db');
@@ -65,6 +89,7 @@ class DatabaseProvider extends ChangeNotifier{
     tableDetailList.clear();
     List list=await db.rawQuery(query);
     List listCopy=List.from(list);
+    print(list);
     for(int i=0;i<listCopy.length;i++){
       if(listCopy[i]!=null){
         tableDetailList.add(listCopy[i]);
@@ -85,6 +110,56 @@ class DatabaseProvider extends ChangeNotifier{
    for(int i=0;i<list.length;i++){
 
    }
+  }
+
+  Future<int> createItem3name(Item3NameModel i3n) async{
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String databasePath = join(appDocDir.path, 'asset_EasySoftDataFile.db');
+    var db = await openDatabase(databasePath);
+    print("hello in item name");
+    print(i3n);
+    return await db.insert('Item3Name', i3n.toMap());
+
+
+  }
+
+  Future<int> creatCashBook(CashBookModel cb) async{
+
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String databasePath = join(appDocDir.path, 'asset_EasySoftDataFile.db');
+    var db = await openDatabase(databasePath);
+
+    print(cb);
+    return await db.insert('CashBook', cb.toMap());
+
+  }
+
+  Future<int> createAccount2Group(Account2GroupModel a2g) async{
+     Directory appDocDir = await getApplicationDocumentsDirectory();
+    String databasePath = join(appDocDir.path, 'asset_EasySoftDataFile.db');
+    var db = await openDatabase(databasePath);
+    print("hello in a2g");
+    print(a2g);
+
+    return await db.insert('Account2Group', a2g.toMap());
+    
+  }
+
+  Future<int> createItem2Group( Item2GroupModel i2g)async{
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String databasePath = join(appDocDir.path, 'asset_EasySoftDataFile.db');
+    var db = await openDatabase(databasePath);
+    print(i2g);
+    return await db.insert('Item2Group', i2g.toMap());
+  }
+
+
+  Future<int> createAccount3Name(Account3NameModel a3g)async{
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String databasePath = join(appDocDir.path, 'asset_EasySoftDataFile.db');
+    var db = await openDatabase(databasePath);
+    print(a3g);
+    return await db.insert('Account3Name', a3g.toMap());
   }
   getSumOfColumn(dynamic columnName,int columnPosition){
     if(tableDetailList[0][columnName].runtimeType==int) {

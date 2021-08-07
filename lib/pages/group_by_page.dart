@@ -36,7 +36,7 @@ class _GroupByPageState extends State<GroupByPage> {
             return DataTable(columns: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName.length, (iCol) {
               return DataColumn(
                   label: InkWell(
-                    child: Text(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![iCol].toString()),
+                    child: Text(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName[iCol].toString()),
                   ));
             }), rows:
                 getGroupedRows(columnName,index,context)
@@ -70,18 +70,18 @@ class _GroupByPageState extends State<GroupByPage> {
   }
   getGroupedRows(String columnName,int index,BuildContext context){
     List<Map> tableDetail=List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableDetailList.length, (index) {
-      Map map=Provider.of<DatabaseProvider>(context,listen: false).tableDetailList![index];
+      Map map=Provider.of<DatabaseProvider>(context,listen: false).tableDetailList[index];
       return map;
     }
     );
     List<DataRow> dataRowList=[];
-    for(int iRow=0;iRow<Provider.of<DatabaseProvider>(context,listen:false).tableDetailList!.length;iRow++){
+    for(int iRow=0;iRow<Provider.of<DatabaseProvider>(context,listen:false).tableDetailList.length;iRow++){
       var tableDetailRow=tableDetail[iRow];
       if(tableDetailRow[columnName].toString()==Provider.of<DatabaseProvider>(context,listen: false).groupSetList[index].toString()){
         dataRowList.add(DataRow(
             selected: true,
-            cells: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName!.length, (index) {
-              return DataCell(Text(tableDetailRow[Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index]].toString()));
+            cells: List.generate(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName.length, (index) {
+              return DataCell(Text(tableDetailRow[Provider.of<DatabaseProvider>(context,listen:false).tableColumnName[index]].toString()));
             })
 
         ));

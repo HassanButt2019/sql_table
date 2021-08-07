@@ -69,7 +69,7 @@ class _DashboardHomePageState extends State<DashboardHomePage> {
                         mainAxisSpacing: 20),
                     itemBuilder: (context, index) {
                       Map map = Provider.of<DashboardProvider>(context, listen: false)
-                          .projectTableDetailList![index];
+                          .projectTableDetailList[index];
                       List list = map.values.toList();
                       List columnList = map.keys.toList();
                       Color randamColor =

@@ -270,7 +270,8 @@ class _CreateAccountState extends State<CreateAccount> {
                           child: Text("Sign Up")),
                     ),
                   ],
-                )),
+                )
+                ),
 
                 SizedBox(
                   height: 20,

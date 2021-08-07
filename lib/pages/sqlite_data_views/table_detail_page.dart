@@ -21,7 +21,7 @@ class TableDetailPage extends StatefulWidget{
 }
 class _TableDetailPage extends State<TableDetailPage> {
   List<Map> tableDetail=List.generate(Provider.of<DatabaseProvider>(Values.navigatorKey.currentContext as BuildContext,listen:false).tableDetailList.length, (index) {
-    Map map=Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen: false).tableDetailList[index];
+    Map map=Provider.of<DatabaseProvider>(Values.navigatorKey.currentContext as BuildContext,listen: false).tableDetailList[index];
     return map;
   }
   );
@@ -133,7 +133,7 @@ class _TableDetailPage extends State<TableDetailPage> {
                                   print("on long press is pressed");
                                   final value = await showDialog(
                                     context: context,
-                                    builder: (context) =>VisibilityPage(columnName: Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString(),columnIndex: index,),
+                                    builder: (context) =>VisibilityPage(columnName: Provider.of<DatabaseProvider>(context,listen:false).tableColumnName[index].toString(),columnIndex: index,),
                                   );
 
                                   // execution of this code continues when the dialog was closed (popped)
@@ -146,11 +146,11 @@ class _TableDetailPage extends State<TableDetailPage> {
                                     var db = await openDatabase(databasePath);
                                     if(value==1){
                                       Map<String,dynamic> map={"layout":"dataTable",
-                                        "column_name":Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString(),
+                                        "column_name":Provider.of<DatabaseProvider>(context,listen:false).tableColumnName[index].toString(),
                                         "visibility":"0"
                                       };
                                       print(await db.insert('Setting', map));
-                                      Provider.of<DatabaseProvider>(context,listen: false).removeColumn(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString()).then((value) {
+                                      Provider.of<DatabaseProvider>(context,listen: false).removeColumn(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName[index].toString()).then((value) {
                                         setState(() {
 
                                         });
@@ -159,8 +159,8 @@ class _TableDetailPage extends State<TableDetailPage> {
 
 
                                     }else if(value==2){
-                                      Provider.of<DatabaseProvider>(context,listen: false).groupBy(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString());
-                                      Navigator.pushNamed(context, '/group_by_page',arguments: Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString());
+                                      Provider.of<DatabaseProvider>(context,listen: false).groupBy(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName[index].toString());
+                                      Navigator.pushNamed(context, '/group_by_page',arguments: Provider.of<DatabaseProvider>(context,listen:false).tableColumnName[index].toString());
 
                                     }else if(value==3){
                                       sum= Provider.of<DatabaseProvider>(context,listen: false).getSumOfColumn(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName[index],index);
@@ -194,7 +194,7 @@ class _TableDetailPage extends State<TableDetailPage> {
                                         sumColumnIndex=index;
                                       });
                                     }else if(value==6){
-                                      count=Provider.of<DatabaseProvider>(context,listen:false).getColumnCount(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index]);
+                                      count=Provider.of<DatabaseProvider>(context,listen:false).getColumnCount(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName[index]);
                                       setState(() {
                                         showCount=true;
                                         showMin=false;
@@ -205,8 +205,8 @@ class _TableDetailPage extends State<TableDetailPage> {
                                     }else if(value==7){
                                       Provider.of<DatabaseProvider>(context,listen:false).runningSum(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName[index]);
                                       setState(() {
-                                        tableDetail=List.generate(Provider.of<DatabaseProvider>(Values.navigatorKey.currentContext as BuildContext,listen:false).tableDetailList!.length, (index) {
-                                          Map map=Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen: false).tableDetailList![index];
+                                        tableDetail=List.generate(Provider.of<DatabaseProvider>(Values.navigatorKey.currentContext as BuildContext,listen:false).tableDetailList.length, (index) {
+                                          Map map=Provider.of<DatabaseProvider>(Values.navigatorKey.currentContext as BuildContext,listen: false).tableDetailList[index];
                                           return map;
                                         }
                                         );
@@ -216,10 +216,10 @@ class _TableDetailPage extends State<TableDetailPage> {
 
                                   }
                                   else if (value != null  && value.runtimeType.toString()=="List<dynamic>"){
-                                    Provider.of<DatabaseProvider>(context,listen:false).getSearchTable(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString(), index,value);
+                                    Provider.of<DatabaseProvider>(context,listen:false).getSearchTable(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName[index].toString(), index,value);
                                     setState(() {
-                                      tableDetail=List.generate(Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableDetailList!.length, (index) {
-                                        Map map=Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen: false).tableDetailList![index];
+                                      tableDetail=List.generate(Provider.of<DatabaseProvider>(Values.navigatorKey.currentContext as BuildContext,listen:false).tableDetailList.length, (index) {
+                                        Map map=Provider.of<DatabaseProvider>(Values.navigatorKey.currentContext as BuildContext,listen: false).tableDetailList[index];
                                         return map;
                                       }
                                       );
@@ -227,7 +227,7 @@ class _TableDetailPage extends State<TableDetailPage> {
                                     });
                                   }
                                 },
-                                child: Text(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName![index].toString()),
+                                child: Text(Provider.of<DatabaseProvider>(context,listen:false).tableColumnName[index].toString()),
                               ));
                         }), rows:
                       getTableRows(),
@@ -237,9 +237,9 @@ class _TableDetailPage extends State<TableDetailPage> {
             ),
           ):GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: column.round()),
-              itemCount: Provider.of<DatabaseProvider>(context,listen: false).tableDetailList!.length,
+              itemCount: Provider.of<DatabaseProvider>(context,listen: false).tableDetailList.length,
               itemBuilder: (BuildContext ctx, index){
-                Map map=Provider.of<DatabaseProvider>(context,listen: false).tableDetailList![index];
+                Map map=Provider.of<DatabaseProvider>(context,listen: false).tableDetailList[index];
                 List list=map.values.toList();
                 List columnList=map.keys.toList();
 
@@ -271,8 +271,8 @@ class _TableDetailPage extends State<TableDetailPage> {
             pageFormat: PdfPageFormat.a4,
             build: (pw.Context context)=> [
               pw.Table.fromTextArray(data: <List<String>>[
-                List<String>.generate(Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableColumnName!.length, (index) {
-                  return Provider.of<DatabaseProvider>(Values.navigatorKey!.currentContext as BuildContext,listen:false).tableColumnName![index].toString();
+                List<String>.generate(Provider.of<DatabaseProvider>(Values.navigatorKey.currentContext as BuildContext,listen:false).tableColumnName.length, (index) {
+                  return Provider.of<DatabaseProvider>(Values.navigatorKey.currentContext as BuildContext,listen:false).tableColumnName[index].toString();
                 }
                 ),...tableDetail.map((e) {
                   return List<String>.of(e.values.map((e) =>  e.toString()));
